@@ -1,10 +1,14 @@
-package com.bots.crew.pp.webhook.enteties;
+package com.bots.crew.pp.webhook.enteties.in;
 
 import java.util.List;
 
-public class WebHookEvent {
+/**
+ * Root of the client request recieved each time the user writes a message
+ */
+public class ClientInputEvent {
     private String object;
-    private List<FacebookEventEntry> entry;
+
+    private List<EventEntry> entry;
 
     public String getObject() {
         return object;
@@ -14,11 +18,11 @@ public class WebHookEvent {
         this.object = object;
     }
 
-    public List<FacebookEventEntry> getEntry() {
+    public List<EventEntry> getEntry() {
         return entry;
     }
 
-    public void setEntry(List<FacebookEventEntry> entry) {
+    public void setEntry(List<EventEntry> entry) {
         this.entry = entry;
     }
 
@@ -27,7 +31,7 @@ public class WebHookEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        WebHookEvent that = (WebHookEvent) o;
+        ClientInputEvent that = (ClientInputEvent) o;
 
         if (object != null ? !object.equals(that.object) : that.object != null) return false;
         return entry != null ? entry.equals(that.entry) : that.entry == null;

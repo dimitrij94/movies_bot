@@ -1,6 +1,6 @@
-package com.bots.crew.pp.webhook.enteties.response;
+package com.bots.crew.pp.webhook.enteties.request;
 
-public class MessagingResponseContent {
+public class MessagingRequestContent {
     private String text;
 
     public String getText() {
@@ -16,7 +16,7 @@ public class MessagingResponseContent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MessagingResponseContent that = (MessagingResponseContent) o;
+        MessagingRequestContent that = (MessagingRequestContent) o;
 
         return text != null ? text.equals(that.text) : that.text == null;
     }

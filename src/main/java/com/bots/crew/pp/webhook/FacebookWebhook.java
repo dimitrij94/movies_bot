@@ -4,21 +4,23 @@ import com.bots.crew.pp.webhook.enteties.Hub;
 import com.bots.crew.pp.webhook.handlers.FacebookMessageHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 @RestController
+@Scope("session")
 public class FacebookWebhook {
 
     private Environment environment;
@@ -29,7 +31,8 @@ public class FacebookWebhook {
     private String testAppAccessToken;
     private List<FacebookMessageHandler> handlers;
     private ObjectMapper objectMapper;
-
+    private MessagerUserStatus status = MessagerUserStatus.GETTING_STARTED;
+    private String psid;
 
     public FacebookWebhook(Environment environment, ObjectMapper objectMapper, List<FacebookMessageHandler> handlers) {
         this.environment = environment;
@@ -53,15 +56,24 @@ public class FacebookWebhook {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping(value = "/webhook", consumes = "application/json")
+    @PostMapping(value = "/webhook", consumes = "application/json", produces = "application/json")
     public ResponseEntity webhook(HttpServletRequest request) throws IOException, ServletException {
         JsonNode root = objectMapper.readTree(request.getInputStream());
         JsonNode webhookEvent = root.path("entry").path(0).path("messaging").path(0);
+        String psid = this.storeInSessionPSID(request, webhookEvent);
         FacebookMessageHandler handler = findFittingHandler(webhookEvent);
+        ResponseEntity s = handler.execute(webhookEvent, psid, status);
+        return s;
+    }
 
-        return  handler.execute(objectMapper.writeValueAsString(webhookEvent));
-
-
+    private String storeInSessionPSID(HttpServletRequest request, JsonNode messaging) {
+        String psid = (String) request.getAttribute("PSID");
+        if (psid != null) {
+            this.psid = psid;
+            psid = messaging.path("sender").path("id").asText();
+            request.setAttribute("PSID", psid);
+        }
+        return psid;
     }
 
     private FacebookMessageHandler findFittingHandler(JsonNode webhookEvent) {
@@ -71,4 +83,15 @@ public class FacebookWebhook {
         return null;
     }
 
+    public String getPSID(){
+        return this.psid;
+    }
+
+    public MessagerUserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessagerUserStatus status) {
+        this.status = status;
+    }
 }

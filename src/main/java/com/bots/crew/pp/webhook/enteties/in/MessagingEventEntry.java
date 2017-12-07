@@ -1,8 +1,10 @@
-package com.bots.crew.pp.webhook.enteties;
+package com.bots.crew.pp.webhook.enteties.in;
+
+import com.bots.crew.pp.webhook.enteties.in.messages.Messaging;
 
 import java.util.List;
 
-public class MessagingEventEntry extends FacebookEventEntry {
+public class MessagingEventEntry extends EventEntry {
     private List<Messaging> messaging;
 
     public List<Messaging> getMessaging() {

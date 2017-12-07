@@ -1,26 +1,21 @@
-package com.bots.crew.pp.webhook.enteties;
+package com.bots.crew.pp.webhook.enteties.in.messages;
+
+import com.bots.crew.pp.webhook.enteties.recipient.Recipient;
 
 import java.util.Date;
 
 public class Messaging {
-    private Sender sender;
-    private Sender recipient;
+    private Recipient sender;
+    private Recipient recipient;
     private Date timestamp;
     private Message message;
 
-    public Sender getSender() {
-        return sender;
-    }
 
-    public void setSender(Sender sender) {
-        this.sender = sender;
-    }
-
-    public Sender getRecipient() {
+    public Recipient getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(Sender recipient) {
+    public void setRecipient(Recipient recipient) {
         this.recipient = recipient;
     }
 
@@ -40,6 +35,14 @@ public class Messaging {
         this.message = message;
     }
 
+    public Recipient getSender() {
+        return sender;
+    }
+
+    public void setSender(Recipient sender) {
+        this.sender = sender;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,7 +50,7 @@ public class Messaging {
 
         Messaging messaging = (Messaging) o;
 
-        if (sender != null ? !sender.equals(messaging.sender) : messaging.sender != null) return false;
+        if (recipient != null ? !recipient.equals(messaging.recipient) : messaging.recipient != null) return false;
         if (recipient != null ? !recipient.equals(messaging.recipient) : messaging.recipient != null) return false;
         if (timestamp != null ? !timestamp.equals(messaging.timestamp) : messaging.timestamp != null) return false;
         return message != null ? message.equals(messaging.message) : messaging.message == null;
@@ -55,7 +58,7 @@ public class Messaging {
 
     @Override
     public int hashCode() {
-        int result = sender != null ? sender.hashCode() : 0;
+        int result = recipient != null ? recipient.hashCode() : 0;
         result = 31 * result + (recipient != null ? recipient.hashCode() : 0);
         result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);

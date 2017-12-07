@@ -1,0 +1,32 @@
+{
+  /* WebHookEvent */
+  "object": "page",
+  "entry": [
+    /* MessagingEventEntry */
+    {
+      "id": "2039927066252098",
+      "time": 1512556868727,
+      /* Array of  class messaging*/
+      "messaging": [
+        {
+          /* Recepient class */
+          "sender": {
+            "id": "1414885871972397"
+          },
+          /* Recepient class */
+          "recipient": {
+            "id": "2039927066252098"
+          },
+
+          "timestamp": 1512554695225,
+          /* Message class */
+          "message": {
+            "mid": "mid.$cAAdluZuHRchmXI5SOVgK0jrbjCUB",
+            "seq": 385,
+            "text": "test message"
+          }
+        }
+      ]
+    }
+  ]
+}

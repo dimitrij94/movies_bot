@@ -1,9 +1,9 @@
-package com.bots.crew.pp.webhook.enteties;
+package com.bots.crew.pp.webhook.enteties.in.messages;
 
 public class Message {
-    private String mid;
-    private int sqt;
-    private String text;
+    protected String mid;
+    protected int sqt;
+    protected String text;
 
     public String getMid() {
         return mid;
@@ -28,4 +28,7 @@ public class Message {
     public void setText(String text) {
         this.text = text;
     }
+
+
+
 }

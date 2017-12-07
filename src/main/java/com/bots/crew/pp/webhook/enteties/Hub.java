@@ -3,9 +3,10 @@ package com.bots.crew.pp.webhook.enteties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Hub {
-    String mode;
-    String verificationToken;
-    String challenge;
+    private String mode;
+    @JsonProperty("verification_token")
+    private String verificationToken;
+    private String challenge;
 
     public Hub() {
     }

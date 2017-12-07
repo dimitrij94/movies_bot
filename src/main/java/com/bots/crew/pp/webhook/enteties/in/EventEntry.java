@@ -1,11 +1,13 @@
-package com.bots.crew.pp.webhook.enteties;
+package com.bots.crew.pp.webhook.enteties.in;
 
 import java.util.Date;
 
-public class FacebookEventEntry {
+/**
+ *
+ */
+public abstract class EventEntry {
     private String id;
     private Date time;
-
     public String getId() {
         return id;
     }
@@ -27,7 +29,7 @@ public class FacebookEventEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FacebookEventEntry that = (FacebookEventEntry) o;
+        EventEntry that = (EventEntry) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         return time != null ? time.equals(that.time) : that.time == null;
