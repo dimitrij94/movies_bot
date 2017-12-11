@@ -1,6 +1,5 @@
 package com.bots.crew.pp.webhook.enteties.request;
 
-import com.bots.crew.pp.webhook.enteties.replies.QuickReply;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;

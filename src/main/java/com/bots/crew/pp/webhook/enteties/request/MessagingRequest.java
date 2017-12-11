@@ -2,10 +2,16 @@ package com.bots.crew.pp.webhook.enteties.request;
 
 import com.bots.crew.pp.webhook.enteties.recipient.Recipient;
 
-public class MessagingRequest {
+import java.util.Date;
 
+public class MessagingRequest {
+    private Date timestamp;
     protected MessagingRequestContent message;
     protected Recipient recipient;
+
+    public MessagingRequest() {
+        timestamp = new Date();
+    }
 
     public MessagingRequestContent getMessage() {
         return message;

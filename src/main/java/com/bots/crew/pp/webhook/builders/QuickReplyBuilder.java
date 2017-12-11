@@ -4,7 +4,7 @@ import com.bots.crew.pp.webhook.enteties.recipient.Recipient;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.enteties.request.QuickReplyRequestContent;
 
-public abstract class QuickReplyBuilder {
+public abstract class QuickReplyBuilder implements ReplyBuilder{
 
     public MessagingRequest build() {
         MessagingRequest request = new MessagingRequest();

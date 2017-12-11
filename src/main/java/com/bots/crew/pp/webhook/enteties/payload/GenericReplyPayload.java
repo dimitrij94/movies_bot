@@ -1,5 +1,6 @@
 package com.bots.crew.pp.webhook.enteties.payload;
 
+import com.bots.crew.pp.webhook.enteties.request.GenericTamplateElement;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;

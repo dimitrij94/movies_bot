@@ -1,11 +1,40 @@
 package com.bots.crew.pp.webhook.enteties.db;
 
-public enum MovieTechnology {
-    T2D("2D"), T3D("3D"), T4D("4D"), ANY("Any");
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
+@Entity
+public class MovieTechnology {
+    @Id
+    @GeneratedValue
+    private Integer id;
+    private String name;
+    @OneToMany(mappedBy = "technology")
+    private List<MovieSession> movieSessions;
 
-    String name;
+    public Integer getId() {
+        return id;
+    }
 
-    MovieTechnology(String name) {
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public List<MovieSession> getMovieSessions() {
+        return movieSessions;
+    }
+
+    public void setMovieSessions(List<MovieSession> movieSessions) {
+        this.movieSessions = movieSessions;
     }
 }

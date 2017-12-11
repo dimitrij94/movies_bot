@@ -2,6 +2,8 @@ package com.bots.crew.pp.webhook.enteties.db;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.util.Date;
+import java.util.List;
 
 @Entity(name = "movie_session")
 public class MovieSession {
@@ -9,10 +11,12 @@ public class MovieSession {
     @GeneratedValue
     private Integer id;
 
+    @Temporal(TemporalType.TIME)
     @Column(name = "session_time")
-    private LocalTime sessionTime;
+    private Date sessionTime;
 
-    private String technology;
+    @ManyToOne
+    private MovieTechnology technology;
 
     @Column(name = "seats_left")
     private int seatsLeft;
@@ -23,6 +27,8 @@ public class MovieSession {
     @ManyToOne
     private Cinema cinema;
 
+    @OneToMany(mappedBy = "session")
+    private List<UserReservation> reservations;
 
     public Integer getId() {
         return id;
@@ -32,11 +38,11 @@ public class MovieSession {
         this.id = id;
     }
 
-    public LocalTime getSessionTime() {
+    public Date getSessionTime() {
         return sessionTime;
     }
 
-    public void setSessionTime(LocalTime sessionTime) {
+    public void setSessionTime(Date sessionTime) {
         this.sessionTime = sessionTime;
     }
 
@@ -56,11 +62,11 @@ public class MovieSession {
         this.cinema = cinema;
     }
 
-    public String getTechnology() {
+    public MovieTechnology getTechnology() {
         return technology;
     }
 
-    public void setTechnology(String technology) {
+    public void setTechnology(MovieTechnology technology) {
         this.technology = technology;
     }
 
@@ -70,5 +76,13 @@ public class MovieSession {
 
     public void setSeatsLeft(int seatsLeft) {
         this.seatsLeft = seatsLeft;
+    }
+
+    public List<UserReservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<UserReservation> reservations) {
+        this.reservations = reservations;
     }
 }

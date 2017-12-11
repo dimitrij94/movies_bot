@@ -1,41 +1,35 @@
 package com.bots.crew.pp.webhook.observers;
 
-import com.bots.crew.pp.webhook.FacebookWebhook;
-import com.bots.crew.pp.webhook.MessagerUserStatus;
-import com.bots.crew.pp.webhook.builders.quick_reply.FindOrListMoviesQuickRequestBuilder;
-import com.bots.crew.pp.webhook.client.TextMessageClient;
+import com.bots.crew.pp.webhook.MessangerUserStatus;
+import com.bots.crew.pp.webhook.builders.quick.FindOrListMoviesQuickRequestBuilder;
+import com.bots.crew.pp.webhook.client.MessageClient;
+import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
+import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
-import com.bots.crew.pp.webhook.handlers.MessagingHandler;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.Scope;
+import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
+import com.bots.crew.pp.webhook.services.MessengerUserService;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("session")
-public class ListOrFindMovieObserver implements Observer<MessagingRequest>, InitializingBean {
+public class ListOrFindMovieObserver extends AbstractMessagingObserver {
 
-    private FacebookWebhook webhook;
-    private TextMessageClient client;
-    private MessagingHandler handler;
-
-    public ListOrFindMovieObserver(FacebookWebhook webhook, MessagingHandler handler) {
-        this.handler = handler;
-        this.webhook = webhook;
+    public ListOrFindMovieObserver(FacebookMessagingHandler handler,
+                                   MessageClient client,
+                                   MessengerUserService userService) {
+        super(handler, client, userService);
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        handler.addObserver(this);
+    public MessangerUserStatus getObservableStatus() {
+        return MessangerUserStatus.GETTING_STARTED;
     }
 
     @Override
-    public void notify(MessagingRequest message) {
-        if (webhook.getStatus() == MessagerUserStatus.GETTING_STARTED || message.getMessage().getText().equals("START")) {
-            String psid = webhook.getPSID();
-            MessagingRequest request =
-                    new FindOrListMoviesQuickRequestBuilder(psid).build();
-            client.sandMassage(request);
-            this.webhook.setStatus(MessagerUserStatus.SELECT_METHOD_OF_FINDING_MOVIE);
-        }
+    public void notify(Messaging message, MessengerUser user) {
+        String psid = message.getSender().getId();
+        MessagingRequest request =
+                new FindOrListMoviesQuickRequestBuilder(psid).build();
+        client.sandMassage(request);
+        userService.setStatus(psid, MessangerUserStatus.SELECT_METHOD_OF_FINDING_MOVIE);
     }
 }

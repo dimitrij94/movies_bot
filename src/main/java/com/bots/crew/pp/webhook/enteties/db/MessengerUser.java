@@ -1,23 +1,28 @@
 package com.bots.crew.pp.webhook.enteties.db;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.bots.crew.pp.webhook.MessangerUserStatus;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "messenger_user")
 public class MessengerUser {
+
     @Id
-    @GeneratedValue
-    Integer id;
+    private String psid;
 
-    String psid;
+    @Enumerated
+    private MessangerUserStatus status;
 
-    public Integer getId() {
-        return id;
+    @OneToMany(mappedBy = "user")
+    private List<UserReservation> reservations;
+
+    public MessengerUser() {
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public MessengerUser(String psid, MessangerUserStatus status) {
+        this.status = status;
+        this.psid = psid;
     }
 
     public String getPsid() {
@@ -28,6 +33,22 @@ public class MessengerUser {
         this.psid = psid;
     }
 
+    public MessangerUserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessangerUserStatus status) {
+        this.status = status;
+    }
+
+    public List<UserReservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<UserReservation> reservations) {
+        this.reservations = reservations;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -35,14 +56,14 @@ public class MessengerUser {
 
         MessengerUser that = (MessengerUser) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        return psid != null ? psid.equals(that.psid) : that.psid == null;
+        if (psid != null ? !psid.equals(that.psid) : that.psid != null) return false;
+        return status == that.status;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (psid != null ? psid.hashCode() : 0);
+        int result = psid != null ? psid.hashCode() : 0;
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
 }

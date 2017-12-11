@@ -1,35 +1,22 @@
 package com.bots.crew.pp.webhook.client;
 
-import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.bots.crew.pp.webhook.builders.TextReplyBuilder;
+import com.bots.crew.pp.webhook.builders.text.TextReplyBuilderImpl;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class TextMessageClient extends AbstractFacebookClient{
-    private Logger log = LoggerFactory.getLogger(TextMessageClient.class);
-    private HttpHeaders h;
+public class TextMessageClient extends MessageClient {
+    private TextReplyBuilder textReplyBuilder = new TextReplyBuilderImpl();
 
     public TextMessageClient(Environment env, RestTemplate restTemplate) {
         super(env, restTemplate);
-        h = new HttpHeaders();
-        h.set("Content-type", "application/json");
     }
 
-    public void sandMassage(MessagingRequest request) {
-        try {
-            restTemplate.postForObject(
-                    postUrl,
-                    new HttpEntity<>(request, h),
-                    MessagingRequest.class
-            );
-        } catch (HttpClientErrorException e) {
-            log.error(e.getResponseBodyAsString(), e);
-        }
+    public void sendTextMessage(String psid, String text) {
+        textReplyBuilder.setMessage(text);
+        textReplyBuilder.setPsid(psid);
+        sandMassage(textReplyBuilder.build());
     }
 }

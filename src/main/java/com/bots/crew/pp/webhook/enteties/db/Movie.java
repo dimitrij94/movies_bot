@@ -14,8 +14,10 @@ public class Movie {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name="trailer_url")
+    private String trailerUrl;
+
     @ManyToMany(mappedBy = "movies")
-    @Column(name = "movie_genres")
     private List<MovieGenre> movieGenres;
 
     @ManyToMany(mappedBy = "movies")
@@ -23,6 +25,9 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie")
     private List<MovieSession> movieSessions;
+
+    @OneToMany(mappedBy = "movie")
+    private List<UserReservation> reservations;
 
     public Integer getId() {
         return id;
@@ -70,5 +75,21 @@ public class Movie {
 
     public void setMovieSessions(List<MovieSession> movieSessions) {
         this.movieSessions = movieSessions;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
+    }
+
+    public List<UserReservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<UserReservation> reservations) {
+        this.reservations = reservations;
     }
 }
