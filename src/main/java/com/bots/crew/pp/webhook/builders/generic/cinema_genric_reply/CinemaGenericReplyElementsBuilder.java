@@ -42,7 +42,7 @@ public class CinemaGenericReplyElementsBuilder extends GenericReplyElementsBuild
         GenericTamplateButton buttonOne = new GenericTamplateButton();
         buttonOne.setTitle("Show location");
         buttonOne.setType("web_url");
-        buttonOne.setUrl(String.format("https://www.google.com/maps?q=%f,%f", cinema.getLongitude(), cinema.getLatitude()));
+        buttonOne.setUrl(String.format("https://www.google.com/maps?q=%s", cinema.getAddress()));
         return buttonOne;
     }
 
