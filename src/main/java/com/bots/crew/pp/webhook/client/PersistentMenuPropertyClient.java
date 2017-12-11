@@ -1,5 +1,6 @@
 package com.bots.crew.pp.webhook.client;
 
+import com.bots.crew.pp.webhook.PersistantMenuOptions;
 import com.bots.crew.pp.webhook.enteties.properties.persistent_menu.MenuItem;
 import com.bots.crew.pp.webhook.enteties.properties.persistent_menu.PersistentMenu;
 import com.bots.crew.pp.webhook.enteties.properties.persistent_menu.PersistentMenuRequest;
@@ -28,15 +29,15 @@ public class PersistentMenuPropertyClient extends AbstractFacebookClient<Persist
         return postUrl;
     }
 
-    public PersistentMenuRequest getDefaultRequest() {
+    public static PersistentMenuRequest getDefaultRequest() {
         MenuItem item = new MenuItem();
         item.setType("postback");
-        item.setPayload("{\"persistent_menu\":true, \"command\":\"showReservation\"}");
+        item.setPayload(String.format("{\"persistent_menu\":%d}", PersistantMenuOptions.SHOW_ALL_RESERVATIONS.ordinal()));
         item.setTitle("Show all of my reservation");
 
         PersistentMenu menu = new PersistentMenu();
         menu.setLocale("default");
-        menu.setComposerInputDisabled(true);
+        menu.setComposerInputDisabled(false);
         menu.setMenuItemList(Collections.singletonList(item));
 
         PersistentMenuRequest request = new PersistentMenuRequest();

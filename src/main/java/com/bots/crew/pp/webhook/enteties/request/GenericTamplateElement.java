@@ -12,7 +12,7 @@ public class GenericTamplateElement {
     private String subtitle;
     @JsonProperty("default_action")
     private AttachmentDefaultAction defaultAction;
-    private List<GenericTamplateButtons> buttons;
+    private List<GenericTamplateButton> buttons;
 
     public String getTitle() {
         return title;
@@ -46,11 +46,11 @@ public class GenericTamplateElement {
         this.defaultAction = defaultAction;
     }
 
-    public List<GenericTamplateButtons> getButtons() {
+    public List<GenericTamplateButton> getButtons() {
         return buttons;
     }
 
-    public void setButtons(List<GenericTamplateButtons> buttons) {
+    public void setButtons(List<GenericTamplateButton> buttons) {
         this.buttons = buttons;
     }
 

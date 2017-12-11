@@ -13,9 +13,9 @@ import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
 import com.bots.crew.pp.webhook.repositories.MovieGenreRepository;
-import com.bots.crew.pp.webhook.repositories.MovieSessionRepository;
 import com.bots.crew.pp.webhook.services.MessengerUserService;
 import com.bots.crew.pp.webhook.services.MovieService;
+import com.bots.crew.pp.webhook.services.UserReservationService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,16 +24,17 @@ import java.util.List;
 public class ListAllMoviesOrGenresObserver extends AbstractMessagingObserver {
     private MovieService movieService;
     private MovieGenreRepository genreRepository;
-    private MovieSessionRepository sessionRepository;
+    private UserReservationService userReservationService;
 
     public ListAllMoviesOrGenresObserver(FacebookMessagingHandler handler,
                                          TextMessageClient client,
                                          MessengerUserService userService,
                                          MovieService movieService,
-                                         MovieGenreRepository genreRepository) {
+                                         MovieGenreRepository genreRepository, UserReservationService userReservationService) {
         super(handler, client, userService);
         this.movieService = movieService;
         this.genreRepository = genreRepository;
+        this.userReservationService = userReservationService;
     }
 
 
@@ -49,18 +50,19 @@ public class ListAllMoviesOrGenresObserver extends AbstractMessagingObserver {
             if (todayMoviesList.isEmpty()) {
                 ((TextMessageClient) client)
                         .sendTextMessage(psid, "Sorry it appears that there are no open tickets to book, that i am aware of =(");
+            } else {
+                ((TextMessageClient) client).sendTextMessage(psid, "Damn, what a hot list!");
+                userReservationService.saveReservationForToday(psid);
+                request = new MoviesRequestBuilder(psid, todayMoviesList).build();
+                procidingStatus = MessangerUserStatus.SELECT_TODAY_MOVIE;
             }
-            MoviesRequestBuilder requestBuilder = new MoviesRequestBuilder(psid, todayMoviesList);
-            request = requestBuilder.build();
-            procidingStatus = MessangerUserStatus.SELECT_MOVIE;
-
         } else if (replyPayload.equals(FindOrListMoviesQuickRequestBuilder.FIND_REPLY_PAYLOAD)) {
-            List<MovieGenre> movieGenres = this.genreRepository.findAll();
+            List<MovieGenre> movieGenres = this.genreRepository.finAllWithKnownMovies();
             request = new GanreQuickRequestBuilder(psid, movieGenres).build();
             procidingStatus = MessangerUserStatus.SELECT_GENRE;
         }
 
-        this.client.sandMassage(request);
+        this.client.sendMassage(request);
         this.userService.setStatus(psid, procidingStatus);
     }
 

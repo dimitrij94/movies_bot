@@ -34,7 +34,7 @@ public class SelectNearestCinemaObserver extends AbstractMessagingObserver {
         reservationService.saveCinema(Integer.parseInt(cinemaId), userReservation);
         int maxNumberOfTickets = this.movieSessionService.findMaxNumberOfTicketsForUserLastReservation(userReservation.getId());
         MessagingRequest request = new SelectNumberOfTicketsRequestBuilder(psid, maxNumberOfTickets).build();
-        client.sandMassage(request);
+        client.sendMassage(request);
         userService.save(psid, MessangerUserStatus.SELECT_NUMBER_OF_TICKETS);
     }
 

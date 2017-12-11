@@ -21,6 +21,10 @@ public abstract class AbstractMessagingObserver implements InitializingBean, Obs
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        this.registerObserver();
+    }
+
+    protected void registerObserver(){
         handler.addObserver(this, getObservableStatus());
     }
 

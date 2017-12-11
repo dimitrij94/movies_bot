@@ -21,7 +21,7 @@ public abstract class AbstractFacebookClient<T> {
         pageAccessKey = this.env.getProperty("facebook.test.page.access.token");
     }
 
-    public void sandMassage(T request) {
+    public void sendMassage(T request) {
         try {
             restTemplate.postForObject(
                     getPostUrl(),

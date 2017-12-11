@@ -30,15 +30,15 @@ public class GreetingPropertyMessageClient extends AbstractFacebookClient<Greeti
     }
 
     public void configureBotsGreeting(GreetingPropertyRequest request) {
-        this.sandMassage(request);
+        this.sendMassage(request);
     }
 
     public static GreetingPropertyRequest getDefault() {
         GreetingPropertyRequest request = new GreetingPropertyRequest();
         List<Greeting> defaultGreetings = new LinkedList<>();
-        defaultGreetings.add(new Greeting("default", "Давйте розпочинати!"));
-        defaultGreetings.add(new Greeting("uk_UA", "Давйте розпочинати!"));
-        defaultGreetings.add(new Greeting("en_US", "Let`s get started!"));
+        defaultGreetings.add(new Greeting("default", "Hi, Dmitrij! My name is Isaac The Cinema Bot. I will help you choose a movie and book tickets!"));
+        defaultGreetings.add(new Greeting("uk_UA", "Привіт {{user_first_name}}! Моє ім'я Ісаак Бот Кінознавець. Я допоможу тобі вибрати фільм і замовити квиток!"));
+        defaultGreetings.add(new Greeting("en_US", "Hi, {{user_first_name}}! My name is Isaac The Cinema Bot. I will help you choose a movie and book tickets!"));
         request.setGreeting(defaultGreetings);
         return request;
     }

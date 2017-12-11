@@ -22,9 +22,10 @@ public class SelectCinemaObserver extends AbstractMessagingObserver {
     public SelectCinemaObserver(FacebookMessagingHandler handler,
                                 MessageClient client,
                                 MessengerUserService userService,
-                                UserReservationService userReservationService) {
+                                UserReservationService userReservationService, MovieSessionService movieSessionService) {
         super(handler, client, userService);
         this.userReservationService = userReservationService;
+        this.movieSessionService = movieSessionService;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class SelectCinemaObserver extends AbstractMessagingObserver {
         String payload = (String) message.getMessage().getQuickReply().getPayload();
         MessagingRequest request;
         if (payload.equals("find")) {
-            request = new SendLocationRequestBuilder(psid, "Please share your location").build();
+            request = new SendLocationRequestBuilder(psid).build();
             userService.save(psid, MessangerUserStatus.RQUEST_TO_SEND_LOCATION);
         } else {
             int cinemaId = Integer.parseInt(payload);
@@ -41,9 +42,10 @@ public class SelectCinemaObserver extends AbstractMessagingObserver {
             userReservationService.saveCinema(cinemaId, reservation);
             int maxNumberOfTickets = movieSessionService.findMaxNumberOfTicketsForUserLastReservation(reservation.getId());
             request = new SelectNumberOfTicketsRequestBuilder(psid, maxNumberOfTickets).build();
+
             userService.save(psid, MessangerUserStatus.SELECT_NUMBER_OF_TICKETS);
         }
-        this.client.sandMassage(request);
+        this.client.sendMassage(request);
     }
 
     @Override

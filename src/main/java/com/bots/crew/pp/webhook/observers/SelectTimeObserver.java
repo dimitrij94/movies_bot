@@ -5,7 +5,6 @@ import com.bots.crew.pp.webhook.builders.QuickReplyBuilder;
 import com.bots.crew.pp.webhook.builders.ReplyBuilder;
 import com.bots.crew.pp.webhook.builders.generic.list_or_find.MoviesRequestBuilder;
 import com.bots.crew.pp.webhook.builders.quick.GettingStartedQuickReplyBuilder;
-import com.bots.crew.pp.webhook.builders.text.TextReplyBuilderImpl;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.Movie;
@@ -42,32 +41,28 @@ public class SelectTimeObserver extends AbstractMessagingObserver {
     @Override
     public void notify(Messaging message, MessengerUser user) {
         String psid = user.getPsid();
-        int sessionId = Integer.parseInt((String) message.getMessage().getQuickReply().getPayload());
+            int sessionId = Integer.parseInt((String) message.getMessage().getQuickReply().getPayload());
         UserReservation reservation = reservationService.findUserLatestReservation(psid);
         reservation = reservationService.updateForMovieSession(reservation, sessionId);
         List<Movie> movie = Collections.singletonList(reservation.getMovie());
         ReplyBuilder builder;
-        if (movie.isEmpty()) {
-            builder = new TextReplyBuilderImpl(psid, "Sorry it appears that there is no movies " +
-                    "sessions that would match your criteria");
-        } else {
-            builder = new MoviesRequestBuilder(psid, movie);
-            ((MoviesRequestBuilder) builder).setIncludeBuyButton(false);
-            ((TextMessageClient) client).sendTextMessage(psid,
-                    String.format("Great! Now, i have booked %d tickets for you " +
-                                    "on %s, in %s with awesome %s technology at %s",
-                            reservation.getNumberOfTickets(),
-                            reservation.getMovie().getTitle(),
-                            reservation.getCinema().getName(),
-                            reservation.getSession().getTechnology().getName(),
-                            dateFormat.format(reservation.getSession().getSessionTime())));
-        }
+
+        builder = new MoviesRequestBuilder(psid, movie);
+        ((MoviesRequestBuilder) builder).setIncludeBuyButton(false);
+        ((TextMessageClient) client).sendTextMessage(psid,
+                String.format("Great, so I've booked %d tickets for you. \"%s\" in %s at %s.\n" +
+                                "Tickets will be waiting for you in the ticket office.",
+                        reservation.getNumberOfTickets(),
+                        reservation.getMovie().getTitle(),
+                        reservation.getCinema().getName(),
+                        dateFormat.format(reservation.getSession().getSessionTime())));
+
         MessagingRequest request = builder.build();
-        client.sandMassage(request);
+        client.sendMassage(request);
         reservation.setActivated(true);
-        reservationService.save(reservation);
+        reservationService.saveReservationForToday(reservation);
         userService.setStatus(psid, MessangerUserStatus.GETTING_STARTED);
-        QuickReplyBuilder gettingStartedBuilder = new GettingStartedQuickReplyBuilder(psid);
-        client.sandMassage(gettingStartedBuilder.build());
+        QuickReplyBuilder gettingStartedBuilder = new GettingStartedQuickReplyBuilder(psid, GettingStartedQuickReplyBuilder.GREETING_MESSAGE);
+        client.sendMassage(gettingStartedBuilder.build());
     }
 }

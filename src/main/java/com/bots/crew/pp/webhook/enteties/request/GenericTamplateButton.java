@@ -1,6 +1,6 @@
 package com.bots.crew.pp.webhook.enteties.request;
 
-public class GenericTamplateButtons {
+public class GenericTamplateButton {
     private String type;
     private String url;
     private String title;

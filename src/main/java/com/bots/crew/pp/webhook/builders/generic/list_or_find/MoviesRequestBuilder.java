@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MoviesRequestBuilder extends GenericReplyBuilder {
     private List<Movie> movies;
-    private ListAllMoviesRequestElementBuilder elementBuilder = new ListAllMoviesRequestElementBuilder();
+    private MoviesRequestElementBuilder elementBuilder = new MoviesRequestElementBuilder();
     boolean includeBuyButton = true;
 
     public MoviesRequestBuilder(String psid, List<Movie> movies) {

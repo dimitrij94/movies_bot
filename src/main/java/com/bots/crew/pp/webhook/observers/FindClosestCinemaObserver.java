@@ -37,10 +37,9 @@ public class FindClosestCinemaObserver extends AbstractMessagingObserver {
         CoordinatesPayload payload = message.getMessage().getAttachments().get(0).getPayload().getCoordinates();
         List<Cinema> cinemas = this.cinemaService.findCinemasOrderByDistanceTo(payload.getLongitude(), payload.getLatitude());
         ((TextMessageClient) client).sendTextMessage(psid,
-                "Alright, Alright ...Alright, i will order near by cinemas by how close they are to you, " +
-                        "tell me which one you would like to visit");
+                "Here is a list of the closest cinemas");
         MessagingRequest request = new CinemaGenericReplyBuilder(psid, cinemas).build();
-        this.client.sandMassage(request);
+        this.client.sendMassage(request);
         this.userService.save(psid, MessangerUserStatus.SELECT_NEAREST_CINEMA);
     }
 

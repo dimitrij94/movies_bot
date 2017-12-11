@@ -26,7 +26,7 @@ public class SelectCinemaRequestBuilder extends QuickReplyBuilder {
     @Override
     protected QuickReplyRequestContent getRequestContent() {
         QuickReplyRequestContent requestContent = new QuickReplyRequestContent();
-        requestContent.setText("Great, what cinema would you prefer?");
+        requestContent.setText("Please, select the cinema.");
         List<QuickReply> replyList = new ArrayList<>();
         for (Cinema cinema : cinemas) {
             QuickReply quickReply = new QuickReply(cinema.getName(), cinema.getId().toString());

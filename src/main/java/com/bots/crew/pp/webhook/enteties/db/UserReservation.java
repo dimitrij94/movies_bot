@@ -23,6 +23,10 @@ public class UserReservation {
     @ManyToOne(optional = true)
     private MessengerUser user;
 
+    @Temporal(TemporalType.DATE)
+    @Column(name = "session_date")
+    private Date sessionDate;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
 
@@ -88,6 +92,18 @@ public class UserReservation {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public void setNumberOfTickets(Integer numberOfTickets) {
+        this.numberOfTickets = numberOfTickets;
+    }
+
+    public Date getSessionDate() {
+        return sessionDate;
+    }
+
+    public void setSessionDate(Date sessionDate) {
+        this.sessionDate = sessionDate;
     }
 
     @Override

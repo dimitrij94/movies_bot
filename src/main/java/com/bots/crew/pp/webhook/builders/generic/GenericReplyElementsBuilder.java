@@ -1,6 +1,6 @@
 package com.bots.crew.pp.webhook.builders.generic;
 
-import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButtons;
+import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButton;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateElement;
 
 import java.util.List;
@@ -23,6 +23,6 @@ public abstract class GenericReplyElementsBuilder {
 
     protected abstract String getImageUrl();
 
-    protected abstract List<GenericTamplateButtons> getGenericTamplateButtons();
+    protected abstract List<GenericTamplateButton> getGenericTamplateButtons();
 
 }

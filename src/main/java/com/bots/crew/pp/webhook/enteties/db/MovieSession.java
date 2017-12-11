@@ -15,6 +15,7 @@ public class MovieSession {
     @Column(name = "session_time")
     private Date sessionTime;
 
+
     @ManyToOne
     private MovieTechnology technology;
 
@@ -85,4 +86,5 @@ public class MovieSession {
     public void setReservations(List<UserReservation> reservations) {
         this.reservations = reservations;
     }
+
 }

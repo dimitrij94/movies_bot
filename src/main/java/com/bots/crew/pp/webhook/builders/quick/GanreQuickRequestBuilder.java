@@ -27,7 +27,7 @@ public class GanreQuickRequestBuilder extends QuickReplyBuilder {
     @Override
     protected QuickReplyRequestContent getRequestContent() {
         QuickReplyRequestContent requestContent = new QuickReplyRequestContent();
-        requestContent.setText("Now please select the movie from this genre that you would like to watch");
+        requestContent.setText("What genre do you want to watch?");
         List<QuickReply> replyList = new LinkedList<>();
         for (MovieGenre genre : movieGenres) {
             replyList.add(new QuickReply(genre.getName(), genre.getId().toString()));

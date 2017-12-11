@@ -6,8 +6,10 @@ import com.bots.crew.pp.webhook.client.MessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.MovieTechnology;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
+import com.bots.crew.pp.webhook.enteties.messages.Message;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
+import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
 import com.bots.crew.pp.webhook.services.MessengerUserService;
 import com.bots.crew.pp.webhook.services.MovieTechnologyService;
@@ -31,12 +33,14 @@ public class SelectNumberOfTicketsObserver extends AbstractMessagingObserver {
 
     @Override
     public void notify(Messaging message, MessengerUser user) {
-        int numOfTickets = Integer.parseInt((String) message.getMessage().getQuickReply().getPayload());
+        Message messageContent = message.getMessage();
+        QuickReply reply = messageContent.getQuickReply();
+        int numOfTickets = reply == null ? Integer.parseInt(messageContent.getText()) : Integer.parseInt((String) reply.getPayload());
         reservationService.saveNumberOfTickets(user.getPsid(), numOfTickets);
         UserReservation reservation = reservationService.findUserLatestReservation(user.getPsid());
         List<MovieTechnology> technologies = technologyService.getAvailableTechnologies(reservation.getId());
         MessagingRequest request = new SelectTechnologyReplyBuilder(user.getPsid(), technologies).build();
-        client.sandMassage(request);
+        client.sendMassage(request);
         userService.save(user.getPsid(), MessangerUserStatus.SELECT_TECHNOLOGY);
     }
 

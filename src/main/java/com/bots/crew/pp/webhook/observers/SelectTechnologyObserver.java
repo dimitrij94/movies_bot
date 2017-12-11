@@ -10,12 +10,10 @@ import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
-import com.bots.crew.pp.webhook.services.MessengerUserService;
-import com.bots.crew.pp.webhook.services.MovieSessionService;
-import com.bots.crew.pp.webhook.services.MovieTechnologyService;
-import com.bots.crew.pp.webhook.services.UserReservationService;
+import com.bots.crew.pp.webhook.services.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -33,16 +31,24 @@ public class SelectTechnologyObserver extends AbstractMessagingObserver {
 
     @Override
     public void notify(Messaging message, MessengerUser user) {
-        int technologyId = Integer.parseInt((String) message.getMessage().getQuickReply().getPayload());
-        MovieTechnology selectedTechnology = technologyService.find(technologyId);
+        String requestPayload = (String) message.getMessage().getQuickReply().getPayload();
         UserReservation reservation = userReservationService.findUserLatestReservation(user.getPsid());
-        List<MovieSession> sessions = sessionService
-                .findSessionsForMovieCinemaAndTechnology(reservation.getId(), selectedTechnology.getId());
+
+        List<MovieSession> sessions;
+        if (requestPayload.equals("any")) {
+            sessions = sessionService.findMoviesSessionsWithoutTechnology(reservation);
+        } else {
+            int technologyId = Integer.parseInt(requestPayload);
+            MovieTechnology selectedTechnology = technologyService.find(technologyId);
+            sessions = sessionService
+                    .findMoviesSessionsWithTechnology(reservation, selectedTechnology);
+        }
 
         MessagingRequest request = new SelectTimeQuickRequestBuilder(user, sessions).build();
-        client.sandMassage(request);
+        client.sendMassage(request);
         userService.setStatus(user.getPsid(), MessangerUserStatus.SELECT_TIME);
     }
+
 
     @Override
     public MessangerUserStatus getObservableStatus() {

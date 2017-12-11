@@ -29,7 +29,7 @@ public class ListOrFindMovieObserver extends AbstractMessagingObserver {
         String psid = message.getSender().getId();
         MessagingRequest request =
                 new FindOrListMoviesQuickRequestBuilder(psid).build();
-        client.sandMassage(request);
+        client.sendMassage(request);
         userService.setStatus(psid, MessangerUserStatus.SELECT_METHOD_OF_FINDING_MOVIE);
     }
 }

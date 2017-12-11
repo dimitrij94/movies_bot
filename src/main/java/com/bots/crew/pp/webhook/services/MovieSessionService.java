@@ -1,9 +1,12 @@
 package com.bots.crew.pp.webhook.services;
 
 import com.bots.crew.pp.webhook.enteties.db.MovieSession;
+import com.bots.crew.pp.webhook.enteties.db.MovieTechnology;
+import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.repositories.MovieSessionRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -15,10 +18,43 @@ public class MovieSessionService {
     }
 
     public List<MovieSession> findSessionsForMovieCinemaAndTechnology(int reservationId, int technologyId) {
-        return repository.findAllByMovieCinemaTechnology(reservationId, technologyId);
+        return repository.findAllByMovieCinemaTechnologyLaterToday(reservationId, technologyId);
     }
 
     public int findMaxNumberOfTicketsForUserLastReservation(int userReservationId) {
         return this.repository.findMaxNumberOfTicketsForUserLastReservation(userReservationId);
     }
+
+    public List<MovieSession> findSessionForMovieAndCinema(Integer id) {
+        return this.repository.findAllByMovieAndCinemaLaterToday(id);
+    }
+
+    public List<MovieSession> findMoviesSessionsWithTechnology(UserReservation reservation, MovieTechnology selectedTechnology) {
+        List<MovieSession> sessions;
+        if (isReservationForToday(reservation)) {
+            sessions = repository.findAllByMovieCinemaTechnologyLaterToday(reservation.getId(), selectedTechnology.getId());
+        } else {
+            sessions = this.repository.findAllByMovieCinemaTechnology(reservation.getId(), selectedTechnology.getId());
+        }
+        return sessions;
+    }
+
+    public List<MovieSession> findMoviesSessionsWithoutTechnology(UserReservation reservation) {
+        List<MovieSession> sessions;
+        if (isReservationForToday(reservation)) {
+            sessions = repository.findAllByMovieAndCinemaLaterToday(reservation.getId());
+        } else {
+            sessions = this.repository.findAllByMovieAndCinema(reservation.getId());
+        }
+        return sessions;
+    }
+
+    private boolean isReservationForToday(UserReservation reservation) {
+        return UtilsService.convertToLocalDate(reservation.getSessionDate()).getDayOfMonth() == LocalDate.now().getDayOfMonth();
+    }
+/*
+    public List<Date> findAvailableSessionDatesForReservation() {
+        return repository.findAvailableSessionDatesForReservation();
+    }
+    */
 }

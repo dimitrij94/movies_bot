@@ -9,9 +9,14 @@ import java.util.Collections;
 
 public class GettingStartedQuickReplyBuilder extends QuickReplyBuilder {
     private String psid;
+    public static final String GREETING_MESSAGE = "Hi, Dmitrij! \n" +
+            "My name is Isaac The Cinema Bot. \n" +
+            "I will help you choose a movie and book tickets";
+    private String message;
 
-    public GettingStartedQuickReplyBuilder(String psid) {
+    public GettingStartedQuickReplyBuilder(String psid, String message) {
         this.psid = psid;
+        this.message = message;
     }
 
     @Override
@@ -22,7 +27,7 @@ public class GettingStartedQuickReplyBuilder extends QuickReplyBuilder {
     @Override
     protected QuickReplyRequestContent getRequestContent() {
         QuickReplyRequestContent requestContent = new QuickReplyRequestContent();
-        requestContent.setText("Wold you like to book another ticket?");
+        requestContent.setText(message);
         requestContent.setQuickReplies(Collections.singletonList(
                 new QuickReply("Getting Started", "getting started")));
         return requestContent;

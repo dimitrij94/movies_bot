@@ -25,7 +25,7 @@ public class SelectNumberOfTicketsRequestBuilder extends QuickReplyBuilder {
     @Override
     protected QuickReplyRequestContent getRequestContent() {
         QuickReplyRequestContent content = new QuickReplyRequestContent();
-        content.setText("How many tickets would you like to order?");
+        content.setText("How many tickets do you need? (Choose option below or type the number).");
         List<QuickReply> replies = new LinkedList<>();
         int max = maxNumberOfTickets > 10 ? 10 : maxNumberOfTickets;
         for (int i = 1; i < max; i++) {

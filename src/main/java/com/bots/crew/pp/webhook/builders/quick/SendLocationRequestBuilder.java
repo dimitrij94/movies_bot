@@ -9,11 +9,9 @@ import java.util.Collections;
 
 public class SendLocationRequestBuilder extends QuickReplyBuilder {
     private String psid;
-    private String message;
 
-    public SendLocationRequestBuilder(String psid, String message) {
+    public SendLocationRequestBuilder(String psid) {
         this.psid = psid;
-        this.message = message;
     }
 
     @Override
@@ -24,7 +22,7 @@ public class SendLocationRequestBuilder extends QuickReplyBuilder {
     @Override
     protected QuickReplyRequestContent getRequestContent() {
         QuickReplyRequestContent requestContent = new QuickReplyRequestContent();
-        requestContent.setText(message);
+        requestContent.setText("Great send me your location and I will find you the closest cinema.");
         QuickReply locationReply = new QuickReply();
         locationReply.setContentType("location");
         requestContent.setQuickReplies(Collections.singletonList(locationReply));

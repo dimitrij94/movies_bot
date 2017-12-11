@@ -2,7 +2,7 @@ package com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply;
 
 import com.bots.crew.pp.webhook.builders.generic.GenericReplyElementsBuilder;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
-import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButtons;
+import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButton;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,20 +26,20 @@ public class CinemaGenericReplyElementsBuilder extends GenericReplyElementsBuild
     }
 
     @Override
-    protected List<GenericTamplateButtons> getGenericTamplateButtons() {
-        return Arrays.asList(getSelectCinemaButton(), getShowLocationButton());
+    protected List<GenericTamplateButton> getGenericTamplateButtons() {
+        return Arrays.asList(getSelectCinemaButton(cinema), getShowLocationButton(cinema));
     }
 
-    private GenericTamplateButtons getSelectCinemaButton() {
-        GenericTamplateButtons buttonTwo = new GenericTamplateButtons();
+    public static GenericTamplateButton getSelectCinemaButton(Cinema cinema) {
+        GenericTamplateButton buttonTwo = new GenericTamplateButton();
         buttonTwo.setTitle("Select cinema");
         buttonTwo.setPayload(cinema.getId().toString());
         buttonTwo.setType("postback");
         return buttonTwo;
     }
 
-    private GenericTamplateButtons getShowLocationButton() {
-        GenericTamplateButtons buttonOne = new GenericTamplateButtons();
+    public static GenericTamplateButton getShowLocationButton(Cinema cinema) {
+        GenericTamplateButton buttonOne = new GenericTamplateButton();
         buttonOne.setTitle("Show location");
         buttonOne.setType("web_url");
         buttonOne.setUrl(String.format("https://www.google.com/maps?q=%f,%f", cinema.getLongitude(), cinema.getLatitude()));

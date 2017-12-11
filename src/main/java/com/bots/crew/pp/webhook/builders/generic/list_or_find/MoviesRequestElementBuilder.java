@@ -2,18 +2,17 @@ package com.bots.crew.pp.webhook.builders.generic.list_or_find;
 
 import com.bots.crew.pp.webhook.builders.generic.GenericReplyElementsBuilder;
 import com.bots.crew.pp.webhook.enteties.db.Movie;
-import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButtons;
+import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButton;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateElement;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListAllMoviesRequestElementBuilder extends GenericReplyElementsBuilder {
+public class MoviesRequestElementBuilder extends GenericReplyElementsBuilder {
     private Movie movie;
     boolean includeBuyTicketButton;
 
-    public ListAllMoviesRequestElementBuilder() {
+    public MoviesRequestElementBuilder() {
     }
 
     public GenericTamplateElement build(Movie movie, boolean includeBuyTicketButton) {
@@ -38,23 +37,23 @@ public class ListAllMoviesRequestElementBuilder extends GenericReplyElementsBuil
     }
 
     @Override
-    protected List<GenericTamplateButtons> getGenericTamplateButtons() {
-        List<GenericTamplateButtons> buttons = new LinkedList<>();
-        buttons.add(viewTrailerButton());
-        if (includeBuyTicketButton) buttons.add(buyTicketButton());
+    protected List<GenericTamplateButton> getGenericTamplateButtons() {
+        List<GenericTamplateButton> buttons = new LinkedList<>();
+        buttons.add(viewTrailerButton(movie));
+        if (includeBuyTicketButton) buttons.add(buyTicketButton(movie));
         return buttons;
     }
 
-    private GenericTamplateButtons viewTrailerButton() {
-        GenericTamplateButtons buttonOne = new GenericTamplateButtons();
+    public static GenericTamplateButton viewTrailerButton(Movie movie) {
+        GenericTamplateButton buttonOne = new GenericTamplateButton();
         buttonOne.setTitle("Watch Trailer");
         buttonOne.setType("web_url");
         buttonOne.setUrl(movie.getTrailerUrl());
         return buttonOne;
     }
 
-    private GenericTamplateButtons buyTicketButton() {
-        GenericTamplateButtons buttonTwo = new GenericTamplateButtons();
+    public static GenericTamplateButton buyTicketButton(Movie movie) {
+        GenericTamplateButton buttonTwo = new GenericTamplateButton();
         buttonTwo.setTitle("Buy Ticket");
         buttonTwo.setPayload(movie.getId().toString());
         buttonTwo.setType("postback");

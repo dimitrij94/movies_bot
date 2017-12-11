@@ -24,8 +24,8 @@ public class AppProfileConfiguration implements InitializingBean {
     }
 
     public void setProperties() {
-        gettingStarted.sandMassage(GettingStartedPropertyClient.getDefault());
-        greeting.sandMassage(GreetingPropertyMessageClient.getDefault());
-        persistentMenuPropertyClient.sandMassage(persistentMenuPropertyClient.getDefaultRequest());
+        gettingStarted.sendMassage(GettingStartedPropertyClient.getDefault());
+        greeting.sendMassage(GreetingPropertyMessageClient.getDefault());
+        persistentMenuPropertyClient.sendMassage(PersistentMenuPropertyClient.getDefaultRequest());
     }
 }

@@ -17,6 +17,6 @@ public class TextMessageClient extends MessageClient {
     public void sendTextMessage(String psid, String text) {
         textReplyBuilder.setMessage(text);
         textReplyBuilder.setPsid(psid);
-        sandMassage(textReplyBuilder.build());
+        sendMassage(textReplyBuilder.build());
     }
 }
