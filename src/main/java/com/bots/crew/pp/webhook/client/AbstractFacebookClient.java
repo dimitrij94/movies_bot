@@ -37,7 +37,7 @@ public abstract class AbstractFacebookClient<T> {
 
     protected abstract String getPostUrl();
 
-    protected HttpHeaders getDefaultHeaders(){
+    public static HttpHeaders getDefaultHeaders(){
         HttpHeaders h = new HttpHeaders();
         h.set("Content-type", "application/json");
         return h;

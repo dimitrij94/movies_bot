@@ -28,8 +28,8 @@ insert into movie_genre_movies(movie_genres_id, movies_id) values(7,4);
 insert into movie_genre_movies(movie_genres_id, movies_id) values(5,4);
 insert into movie_genre_movies(movie_genres_id, movies_id) values(3,4);
 
-insert into cinema(id, image_url, name, address,longitude,latitude) values(1, 'https://planetakino.ua/f/1/theatres/imax-lviv-forum-mini.jpg', 'Planeta Kino Forum Lviv','Pid Dubom, 12', 49.8496756,24.0202529);
-insert into cinema(id, image_url, name,address, longitude, latitude) values(2, 'https://planetakino.ua/f/1/theatres/pk-leopolis.jpg', 'Planeta Kino King Cross','Stryiska 42', 49.7729918,24.0074682);
+insert into cinema(id, image_url, name, address,longitude,latitude) values(1, 'https://planetakino.ua/f/1/theatres/imax-lviv-forum-mini.jpg', 'Planeta Kino Forum Lviv','Pid Dubom, 12',24.0202529, 49.8496756);
+insert into cinema(id, image_url, name,address, longitude, latitude) values(2, 'https://planetakino.ua/f/1/theatres/pk-leopolis.jpg', 'Planeta Kino King Cross','Stryiska 42',24.0074682, 49.7729918);
 
 insert into cinema_movies(cinemas_id, movies_id) values(1,1);
 insert into cinema_movies(cinemas_id, movies_id) values(1,2);

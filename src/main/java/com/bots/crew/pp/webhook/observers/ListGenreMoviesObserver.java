@@ -39,7 +39,7 @@ public class ListGenreMoviesObserver extends AbstractMessagingObserver {
         MessagingRequest request = new MoviesRequestBuilder(psid, movieList).build();
 
         ((TextMessageClient) client).sendTextMessage(psid,
-                String.format("I'am also a big fan of %s movies. Check this list, I'm sure you will like it.", moviGenreService.find(genreId)));
+                String.format("I'am also a big fan of %s movies. Check this list, I'm sure you will like it.", moviGenreService.find(genreId).getName()));
         client.sendMassage(request);
         this.userService.setStatus(psid, MessangerUserStatus.SELECT_GENRE_MOVIE);
     }

@@ -9,6 +9,14 @@ public class CoordinatesPayload {
     @JsonProperty("lat")
     private double latitude;
 
+    public CoordinatesPayload() {
+    }
+
+    public CoordinatesPayload(double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
     public double getLongitude() {
         return longitude;
     }
