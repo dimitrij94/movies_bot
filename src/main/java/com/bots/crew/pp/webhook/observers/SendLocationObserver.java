@@ -6,6 +6,7 @@ import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
+import com.bots.crew.pp.webhook.enteties.messages.CinemaGoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.payload.CoordinatesPayload;
@@ -29,25 +30,38 @@ public class SendLocationObserver extends AbstractMessagingObserver {
                                 TextMessageClient client,
                                 MessengerUserService userService,
                                 CinemaService cinemaService,
-                                MessengerUserService userService1) {
+                                MessengerUserService userService1, UserReservationService reservationService) {
         super(handler, client, userService);
         this.cinemaService = cinemaService;
         this.userService = userService1;
+        this.reservationService = reservationService;
     }
 
+    @Override
+    public UserReservation changeState(Messaging message, UserReservation reservation) {
+        try {
+            CoordinatesPayload payload = message.getMessage().getAttachments().get(0).getPayload().getCoordinates();
+            reservation.setLongitude(payload.getLongitude());
+            reservation.setLatitude(payload.getLatitude());
+            this.userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_NEAREST_CINEMA, getObservableStatus());
+            return reservationService.save(reservation);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
 
     @Override
-    public void notify(Messaging message, MessengerUser user) {
-        String psid = message.getSender().getId();
-        CoordinatesPayload payload = message.getMessage().getAttachments().get(0).getPayload().getCoordinates();
-        UserReservation reservation = reservationService.findUserLatestReservation(psid);
-        List<Cinema> cinemas = this.cinemaService.findCinemasForMovie(reservation.getId());
-        Map<Integer, GoogleMatrixApiMessage> distances = this.cinemaService.findCinemasOrderByDistanceTo(cinemas, payload.getLongitude(), payload.getLatitude());
+    public void forwardResponse(UserReservation reservation) {
+        String psid = reservation.getUser().getPsid();
+        List<Cinema> cinemas = this.cinemaService.findCinemasForMovie(reservation.getMovie().getId());
+        List<CinemaGoogleMatrixApiMessage> distances = this.cinemaService.findCinemasOrderByDistanceTo(cinemas,
+                reservation.getLongitude(), reservation.getLatitude());
+
         ((TextMessageClient) client).sendTextMessage(psid,
                 "Here is a list of the closest cinemas");
-        MessagingRequest request = new LocatedCinemaGenericReplyBuilder(psid, cinemas, distances).build();
+
+        MessagingRequest request = new LocatedCinemaGenericReplyBuilder(psid, distances).build();
         this.client.sendMassage(request);
-        this.userService.save(psid, MessangerUserStatus.SELECT_NEAREST_CINEMA);
     }
 
     @Override

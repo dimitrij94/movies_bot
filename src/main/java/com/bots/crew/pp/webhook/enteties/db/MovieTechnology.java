@@ -1,18 +1,20 @@
 package com.bots.crew.pp.webhook.enteties.db;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 @Entity
 public class MovieTechnology {
     @Id
     @GeneratedValue
     private Integer id;
+
     private String name;
+
     @OneToMany(mappedBy = "technology")
     private List<MovieSession> movieSessions;
+
+    @OneToMany(mappedBy = "technology")
+    private List<UserReservation> userReservation;
 
     public Integer getId() {
         return id;
@@ -36,5 +38,13 @@ public class MovieTechnology {
 
     public void setMovieSessions(List<MovieSession> movieSessions) {
         this.movieSessions = movieSessions;
+    }
+
+    public List<UserReservation> getUserReservation() {
+        return userReservation;
+    }
+
+    public void setUserReservation(List<UserReservation> userReservation) {
+        this.userReservation = userReservation;
     }
 }

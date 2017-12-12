@@ -20,7 +20,7 @@ public class AppProfileConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        setProperties();
+        //setProperties();
     }
 
     public void setProperties() {

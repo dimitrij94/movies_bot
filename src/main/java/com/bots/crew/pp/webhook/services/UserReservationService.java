@@ -18,24 +18,23 @@ public class UserReservationService {
         this.repository = repository;
     }
 
-    public void updateForMovie(int movieId, int reservationID) {
-        repository.updateSetMovie(movieId, reservationID);
+    public UserReservation updateForMovie(int movieId, UserReservation userReservation) {
+        Movie movie = new Movie();
+        movie.setId(movieId);
+        userReservation.setMovie(movie);
+        return repository.save(userReservation);
     }
 
     public UserReservation findUserLatestReservation(String psid) {
         return repository.findLastReservationOfTheUser(psid);
     }
 
-    public UserReservation saveReservationForToday(String psid) {
-        UserReservation reservation = new UserReservation();
+    public UserReservation saveReservationForToday(UserReservation reservation, MessengerUser user) {
         Date date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        reservation.setSessionDate(date);
         reservation.setTimestamp(new Date());
         reservation.setActivated(false);
-        MessengerUser user = new MessengerUser();
-        user.setPsid(psid);
         reservation.setUser(user);
-        return this.saveReservationForToday(reservation);
+        return this.saveReservationForDate(reservation, date);
     }
 
     /*
@@ -45,15 +44,14 @@ public class UserReservationService {
         }
     */
     @Transactional
-    public void saveCinema(int cinemaId, UserReservation userReservation) {
+    public UserReservation saveCinema(int cinemaId, UserReservation userReservation) {
         Cinema cinema = new Cinema();
         cinema.setId(cinemaId);
         userReservation.setCinema(cinema);
-        repository.save(userReservation);
+        return repository.save(userReservation);
     }
 
-    public UserReservation saveNumberOfTickets(String psid, int numOfTickets) {
-        UserReservation userReservation = repository.findLastReservationOfTheUser(psid);
+    public UserReservation saveNumberOfTickets(UserReservation userReservation, int numOfTickets) {
         userReservation.setNumberOfTickets(numOfTickets);
         return repository.save(userReservation);
     }
@@ -66,7 +64,8 @@ public class UserReservationService {
         return repository.save(reservation);
     }
 
-    public UserReservation saveReservationForToday(UserReservation reservation) {
+    public UserReservation saveReservationForDate(UserReservation reservation, Date userDate) {
+        reservation.setSessionDate(userDate);
         return repository.save(reservation);
     }
 
@@ -76,6 +75,15 @@ public class UserReservationService {
 
     public void deleteNotActiveReservations(String psid) {
         this.repository.deleteAllNotActivated(psid);
+    }
+
+
+    @Transactional
+    public UserReservation updateSetMovie(UserReservation userReservation, int movieId) {
+        Movie movie = new Movie();
+        movie.setId(movieId);
+        userReservation.setMovie(movie);
+        return repository.save(userReservation);
     }
 
     @Transactional
@@ -93,5 +101,30 @@ public class UserReservationService {
         userReservation.setUser(user);
 
         return repository.save(userReservation);
+    }
+
+    public UserReservation createEmptyReservation(MessengerUser user) {
+        UserReservation reservation = new UserReservation();
+        reservation.setTimestamp(new Date());
+        reservation.setUser(user);
+        reservation.setActivated(false);
+        return repository.save(reservation);
+    }
+
+    public UserReservation activateReservation(UserReservation reservation) {
+        reservation.setActivated(true);
+        return repository.save(reservation);
+    }
+
+    public UserReservation save(UserReservation reservation) {
+        return repository.save(reservation);
+    }
+
+    public UserReservation saveEmptyReservation(MessengerUser user) {
+        UserReservation reservation = new UserReservation();
+        reservation.setActivated(false);
+        reservation.setUser(user);
+        reservation.setTimestamp(new Date());
+        return repository.save(reservation);
     }
 }

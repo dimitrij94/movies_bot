@@ -1,6 +1,7 @@
 package com.bots.crew.pp.webhook.services;
 
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
+import com.bots.crew.pp.webhook.enteties.messages.CinemaGoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.payload.CoordinatesPayload;
 import com.bots.crew.pp.webhook.repositories.CinemaRepository;
@@ -31,7 +32,7 @@ public class CinemaService {
         return repository.findAll();
     }
 
-    public Map<Integer, GoogleMatrixApiMessage> findCinemasOrderByDistanceTo(List<Cinema> cinemas, double longitude, double latitude) {
+    public List<CinemaGoogleMatrixApiMessage> findCinemasOrderByDistanceTo(List<Cinema> cinemas, double longitude, double latitude) {
         return googleMatrixApiService.orderCinemasByDistanceToThePoint(cinemas, new CoordinatesPayload(longitude, latitude));
     }
 }

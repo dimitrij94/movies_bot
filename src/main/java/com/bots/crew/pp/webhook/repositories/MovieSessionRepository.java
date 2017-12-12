@@ -30,9 +30,8 @@ public interface MovieSessionRepository extends JpaRepository<MovieSession, Inte
     @Query(value = "SELECT DISTINCT ms.* FROM movie_session as ms inner join user_reservation ur ON ms.cinema_id=ur.cinema_id and ms.movie_id=ur.movie_id and ur.id=?1", nativeQuery = true)
     List<MovieSession> findAllByMovieAndCinema(Integer userReservationId);
 
-    @Query(value = "SELECT DISTINCT s.* FROM movie_session AS s INNER JOIN movie_technology AS t INNER JOIN user_reservation AS r ON r.id=?1 AND r.movie_id = s.movie_id AND r.cinema_id = s.cinema_id AND s.technology_id = ?2 WHERE AND s.seats_left >= r.num_of_tickets", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT s.* FROM movie_session AS s INNER JOIN movie_technology AS t INNER JOIN user_reservation AS r ON r.id=?1 AND r.movie_id = s.movie_id AND r.cinema_id = s.cinema_id AND s.technology_id = ?2 WHERE  s.seats_left >= r.num_of_tickets", nativeQuery = true)
     List<MovieSession> findAllByMovieCinemaTechnology(int reservationId, int technologyId);
-
 
     @Query(value = "SELECT DISTINCT ms.session_date FROM movie_session as ms",  nativeQuery = true)
     List<Date> findAvailableSessionDatesForReservation();

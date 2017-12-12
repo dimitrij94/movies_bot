@@ -4,6 +4,7 @@ import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.builders.quick.FindOrListMoviesQuickRequestBuilder;
 import com.bots.crew.pp.webhook.client.MessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
+import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
@@ -11,11 +12,11 @@ import com.bots.crew.pp.webhook.services.MessengerUserService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListOrFindMovieObserver extends AbstractMessagingObserver {
+public class GettingStartedObserver extends AbstractMessagingObserver {
 
-    public ListOrFindMovieObserver(FacebookMessagingHandler handler,
-                                   MessageClient client,
-                                   MessengerUserService userService) {
+    public GettingStartedObserver(FacebookMessagingHandler handler,
+                                  MessageClient client,
+                                  MessengerUserService userService) {
         super(handler, client, userService);
     }
 
@@ -25,11 +26,16 @@ public class ListOrFindMovieObserver extends AbstractMessagingObserver {
     }
 
     @Override
-    public void notify(Messaging message, MessengerUser user) {
-        String psid = message.getSender().getId();
+    public UserReservation changeState(Messaging message, UserReservation reservation) {
+        return reservation;
+    }
+
+    @Override
+    public void forwardResponse(UserReservation reservation) {
+        MessengerUser user = reservation.getUser();
         MessagingRequest request =
-                new FindOrListMoviesQuickRequestBuilder(psid).build();
+                new FindOrListMoviesQuickRequestBuilder(user.getPsid()).build();
         client.sendMassage(request);
-        userService.setStatus(psid, MessangerUserStatus.SELECT_METHOD_OF_FINDING_MOVIE);
+        userService.setStatus(user, MessangerUserStatus.SELECT_LIST_OR_FIND, getObservableStatus());
     }
 }

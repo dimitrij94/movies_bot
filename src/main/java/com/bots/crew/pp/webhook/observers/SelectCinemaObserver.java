@@ -8,6 +8,7 @@ import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
+import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
 import com.bots.crew.pp.webhook.services.MessengerUserService;
 import com.bots.crew.pp.webhook.services.MovieSessionService;
@@ -28,28 +29,39 @@ public class SelectCinemaObserver extends AbstractMessagingObserver {
         this.movieSessionService = movieSessionService;
     }
 
-    @Override
-    public void notify(Messaging message, MessengerUser user) {
-        String psid = message.getSender().getId();
-        String payload = (String) message.getMessage().getQuickReply().getPayload();
-        MessagingRequest request;
-        if (payload.equals("find")) {
-            request = new SendLocationRequestBuilder(psid).build();
-            userService.save(psid, MessangerUserStatus.RQUEST_TO_SEND_LOCATION);
-        } else {
-            int cinemaId = Integer.parseInt(payload);
-            UserReservation reservation = userReservationService.findUserLatestReservation(psid);
-            userReservationService.saveCinema(cinemaId, reservation);
-            int maxNumberOfTickets = movieSessionService.findMaxNumberOfTicketsForUserLastReservation(reservation.getId());
-            request = new SelectNumberOfTicketsRequestBuilder(psid, maxNumberOfTickets).build();
-
-            userService.save(psid, MessangerUserStatus.SELECT_NUMBER_OF_TICKETS);
-        }
-        this.client.sendMassage(request);
-    }
 
     @Override
     public MessangerUserStatus getObservableStatus() {
         return MessangerUserStatus.SELECT_CINEMA_QUICK_LIST;
+    }
+
+    @Override
+    public UserReservation changeState(Messaging message, UserReservation reservation) {
+        QuickReply quickReply = message.getMessage().getQuickReply();
+        if (quickReply!= null) {
+            String payload = (String) quickReply.getPayload();
+            if (payload.equals("find")) {
+                userService.setStatus(reservation.getUser(), MessangerUserStatus.RQUEST_TO_SEND_LOCATION, getObservableStatus());
+                return reservation;
+            } else {
+                int cinemaId = Integer.parseInt(payload);
+                userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_NUMBER_OF_TICKETS, getObservableStatus());
+                return userReservationService.saveCinema(cinemaId, reservation);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void forwardResponse(UserReservation reservation) {
+        MessengerUser u = reservation.getUser();
+        MessagingRequest request = null;
+        if (u.getStatus().equals(MessangerUserStatus.RQUEST_TO_SEND_LOCATION)) {
+            request = new SendLocationRequestBuilder(u.getPsid()).build();
+        } else if (u.getStatus().equals(MessangerUserStatus.SELECT_NUMBER_OF_TICKETS)) {
+            int maxNumberOfTickets = movieSessionService.findMaxNumberOfTicketsForUserLastReservation(reservation.getId());
+            request = new SelectNumberOfTicketsRequestBuilder(reservation.getUser().getPsid(), maxNumberOfTickets).build();
+        }
+        client.sendMassage(request);
     }
 }

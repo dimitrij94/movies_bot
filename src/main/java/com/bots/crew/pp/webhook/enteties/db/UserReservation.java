@@ -30,6 +30,17 @@ public class UserReservation {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
 
+    @ManyToOne(optional = true)
+    private MovieGenre genre;
+
+    @ManyToOne(optional = true)
+    private MovieTechnology technology;
+
+    private double longitude;
+
+    private double latitude;
+
+
     public Integer getId() {
         return id;
     }
@@ -71,7 +82,7 @@ public class UserReservation {
     }
 
     public int getNumberOfTickets() {
-        return numberOfTickets;
+            return numberOfTickets;
     }
 
     public void setNumberOfTickets(int numberOfTickets) {
@@ -102,8 +113,40 @@ public class UserReservation {
         return sessionDate;
     }
 
+    public MovieTechnology getTechnology() {
+        return technology;
+    }
+
+    public void setTechnology(MovieTechnology technology) {
+        this.technology = technology;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     public void setSessionDate(Date sessionDate) {
         this.sessionDate = sessionDate;
+    }
+
+    public MovieGenre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(MovieGenre genre) {
+        this.genre = genre;
     }
 
     @Override

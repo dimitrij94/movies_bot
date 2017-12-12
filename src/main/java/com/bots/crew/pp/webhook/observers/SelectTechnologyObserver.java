@@ -9,6 +9,7 @@ import com.bots.crew.pp.webhook.enteties.db.MovieTechnology;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
+import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
 import com.bots.crew.pp.webhook.services.*;
 import org.springframework.stereotype.Component;
@@ -30,25 +31,40 @@ public class SelectTechnologyObserver extends AbstractMessagingObserver {
     }
 
     @Override
-    public void notify(Messaging message, MessengerUser user) {
-        String requestPayload = (String) message.getMessage().getQuickReply().getPayload();
-        UserReservation reservation = userReservationService.findUserLatestReservation(user.getPsid());
-
-        List<MovieSession> sessions;
-        if (requestPayload.equals("any")) {
-            sessions = sessionService.findMoviesSessionsWithoutTechnology(reservation);
+    public UserReservation changeState(Messaging message, UserReservation reservation) {
+        String input = parseTechnology(message);
+        if (input.equals("any")) {
+            return reservation;
         } else {
-            int technologyId = Integer.parseInt(requestPayload);
-            MovieTechnology selectedTechnology = technologyService.find(technologyId);
-            sessions = sessionService
-                    .findMoviesSessionsWithTechnology(reservation, selectedTechnology);
+            try {
+                int technologyId = Integer.parseInt(input);
+                MovieTechnology selectedTechnology = technologyService.find(technologyId);
+                reservation.setTechnology(selectedTechnology);
+                return userReservationService.save(reservation);
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
-
-        MessagingRequest request = new SelectTimeQuickRequestBuilder(user, sessions).build();
-        client.sendMassage(request);
-        userService.setStatus(user.getPsid(), MessangerUserStatus.SELECT_TIME);
     }
 
+    private String parseTechnology(Messaging message) {
+        QuickReply quickReply = message.getMessage().getQuickReply();
+        return quickReply == null ? message.getMessage().getText() : (String) quickReply.getPayload();
+    }
+
+    @Override
+    public void forwardResponse(UserReservation reservation) {
+        List<MovieSession> sessions;
+        if (reservation.getTechnology() == null) {
+            sessions = sessionService.findMoviesSessionsWithoutTechnology(reservation);
+        } else {
+            sessions = sessionService
+                    .findMoviesSessionsWithTechnology(reservation, reservation.getTechnology());
+        }
+        MessagingRequest request = new SelectTimeQuickRequestBuilder(reservation.getUser(), sessions).build();
+        client.sendMassage(request);
+        userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_TIME, getObservableStatus());
+    }
 
     @Override
     public MessangerUserStatus getObservableStatus() {

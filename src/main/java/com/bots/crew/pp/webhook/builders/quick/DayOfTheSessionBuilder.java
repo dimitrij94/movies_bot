@@ -48,9 +48,6 @@ public class DayOfTheSessionBuilder extends QuickReplyBuilder {
         return requestContent;
     }
 
-    private LocalDate convertToLocalDate(Date date) {
-        return new java.sql.Date(date.getTime()).toLocalDate();
-    }
 /*
     @Override
     protected QuickReplyRequestContent getRequestContent() {

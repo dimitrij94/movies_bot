@@ -15,4 +15,8 @@ public class MovieGenreService {
     public MovieGenre find(int id) {
         return movieGenreRepository.findOne(id);
     }
+
+    public MovieGenre find(String replyName) {
+        return movieGenreRepository.findOneByName(replyName);
+    }
 }

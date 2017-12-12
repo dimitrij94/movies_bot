@@ -17,18 +17,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 public abstract class PersistentMenuAbstractMessagingObserver extends AbstractMessagingObserver {
-    private ObjectMapper mapper;
-    private PersistantMenuService persistantMenuService;
+    protected ObjectMapper mapper;
+    protected PersistantMenuService persistantMenuService;
 
-    public PersistentMenuAbstractMessagingObserver(FacebookMessagingHandler handler, MessageClient client, MessengerUserService userService, ObjectMapper mapper) {
+    public PersistentMenuAbstractMessagingObserver(FacebookMessagingHandler handler,
+                                                   MessageClient client,
+                                                   MessengerUserService userService,
+                                                   ObjectMapper mapper) {
         super(handler, client, userService);
         this.mapper = mapper;
-    }
-
-    public abstract void notify(Messaging message, MessengerUser user, PersistantMenuMessage menuMessage);
-
-    @Override
-    public void notify(Messaging message, MessengerUser user) {
     }
 
     public abstract MessangerUserStatus getObservableStatus();

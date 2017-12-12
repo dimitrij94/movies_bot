@@ -28,24 +28,34 @@ public class ShowAllReservationsObserver extends PersistentMenuAbstractMessaging
     }
 
     @Override
-    public void notify(Messaging message, MessengerUser user, PersistantMenuMessage menuMessage) {
+    public UserReservation changeState(Messaging message, UserReservation reservation) {
+        return reservation;
+    }
+
+    @Override
+    public void forwardResponse(UserReservation reservation) {
+        MessengerUser user = reservation.getUser();
         String psid = user.getPsid();
         List<UserReservation> userReservations = userReservationService.findLast10ActiveReservations(psid);
         MessagingRequest request;
 
-        if(!userReservations.isEmpty()){
+        if (!userReservations.isEmpty()) {
             request = new UserReservationdRequestBuilder(psid, userReservations).build();
-            ((TextMessageClient)client).sendTextMessage(psid, "Sure, here are all of your reservations.");
+            ((TextMessageClient) client).sendTextMessage(psid, "Sure, here are all of your reservations.");
             client.sendMassage(request);
-        }else{
-            ((TextMessageClient)client).sendTextMessage(psid, "Sorry i can`t find any reservations of yours.");
+        } else {
+            ((TextMessageClient) client).sendTextMessage(psid, "Sorry i can`t find any reservations of yours.");
         }
-        request = new GettingStartedQuickReplyBuilder(psid,"Do you want to add another one?").build();
-        userService.setStatus(psid, MessangerUserStatus.GETTING_STARTED);
+
+    }
+/*
+    private void drop() {
+        request = new GettingStartedQuickReplyBuilder(psid, "Do you want to add another one?").build();
+        userService.setStatus(user, MessangerUserStatus.GETTING_STARTED, user.getStatus());
         userReservationService.deleteNotActiveReservations(psid);
         client.sendMassage(request);
     }
-
+*/
     @Override
     public MessangerUserStatus getObservableStatus() {
         return null;

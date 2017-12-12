@@ -14,6 +14,9 @@ public class MessengerUser {
     @Enumerated
     private MessangerUserStatus status;
 
+    @Enumerated
+    private MessangerUserStatus previousStatus;
+
     @OneToMany(mappedBy = "user")
     private List<UserReservation> reservations;
 
@@ -47,6 +50,14 @@ public class MessengerUser {
 
     public void setReservations(List<UserReservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public MessangerUserStatus getPreviousStatus() {
+        return previousStatus;
+    }
+
+    public void setPreviousStatus(MessangerUserStatus previousStatus) {
+        this.previousStatus = previousStatus;
     }
 
     @Override

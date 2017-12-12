@@ -2,15 +2,13 @@ package com.bots.crew.pp.webhook.services;
 
 import com.bots.crew.pp.webhook.client.GoogleMatrixApiClient;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
+import com.bots.crew.pp.webhook.enteties.messages.CinemaGoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.payload.CoordinatesPayload;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class GoogleMatrixApiService {
@@ -24,16 +22,23 @@ public class GoogleMatrixApiService {
         this.googleMatrixApiClient = googleMatrixApiClient;
     }
 
-    public Map<Integer, GoogleMatrixApiMessage> orderCinemasByDistanceToThePoint(List<Cinema> cinemas, CoordinatesPayload coordinates) {
-        Map<Integer, GoogleMatrixApiMessage> messages = new HashMap<>();
-        cinemas.sort((Cinema c1, Cinema c2) -> {
-            GoogleMatrixApiMessage distance1 = googleMatrixApiClient.getForDistance(buildRequestUrl(getUserOrigin(coordinates), getCinemaOrigin(c1)));
-            GoogleMatrixApiMessage distance2 = googleMatrixApiClient.getForDistance(buildRequestUrl(getUserOrigin(coordinates), getCinemaOrigin(c2)));
-            messages.put(c1.getId(), distance1);
-            messages.put(c2.getId(), distance1);
-            return distance1.getRows().get(0).getElements().get(0).getDuration().getValue() - distance2.getRows().get(0).getElements().get(0).getDuration().getValue();
-        });
+    public List<CinemaGoogleMatrixApiMessage> orderCinemasByDistanceToThePoint(List<Cinema> cinemas, CoordinatesPayload coordinates) {
+        List<CinemaGoogleMatrixApiMessage> messages = getAllDistances(cinemas, coordinates);
+        messages.sort(Comparator.comparingInt(this::getDuration));
         return messages;
+    }
+
+    private int getDuration(CinemaGoogleMatrixApiMessage c) {
+        return c.getDistanceTo().getRows().get(0).getElements().get(0).getDuration().getValue();
+    }
+
+    private List<CinemaGoogleMatrixApiMessage> getAllDistances(List<Cinema> cinemas, CoordinatesPayload coordinates) {
+        List<CinemaGoogleMatrixApiMessage> list = new LinkedList<>();
+        for (Cinema c : cinemas) {
+            GoogleMatrixApiMessage distance = googleMatrixApiClient.getForDistance(buildRequestUrl(getUserOrigin(coordinates), getCinemaOrigin(c)));
+            list.add(new CinemaGoogleMatrixApiMessage(c, distance));
+        }
+        return list;
     }
 
 
