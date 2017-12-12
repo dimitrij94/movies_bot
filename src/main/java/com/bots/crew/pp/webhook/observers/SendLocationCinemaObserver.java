@@ -16,15 +16,15 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class FindClosestCinemaObserver extends AbstractMessagingObserver {
+public class SendLocationCinemaObserver extends AbstractMessagingObserver {
     private CinemaService cinemaService;
     private MessengerUserService userService;
 
-    public FindClosestCinemaObserver(FacebookMessagingHandler handler,
-                                     TextMessageClient client,
-                                     MessengerUserService userService,
-                                     CinemaService cinemaService,
-                                     MessengerUserService userService1) {
+    public SendLocationCinemaObserver(FacebookMessagingHandler handler,
+                                      TextMessageClient client,
+                                      MessengerUserService userService,
+                                      CinemaService cinemaService,
+                                      MessengerUserService userService1) {
         super(handler, client, userService);
         this.cinemaService = cinemaService;
         this.userService = userService1;
