@@ -31,9 +31,15 @@ public class ShowAllReservationsObserver extends PersistentMenuAbstractMessaging
     public void notify(Messaging message, MessengerUser user, PersistantMenuMessage menuMessage) {
         String psid = user.getPsid();
         List<UserReservation> userReservations = userReservationService.findLast10ActiveReservations(psid);
-        MessagingRequest request = new UserReservationdRequestBuilder(psid, userReservations).build();
-        ((TextMessageClient)client).sendTextMessage(psid, "Sure, here are all of your reservations.");
-        client.sendMassage(request);
+        MessagingRequest request;
+
+        if(!userReservations.isEmpty()){
+            request = new UserReservationdRequestBuilder(psid, userReservations).build();
+            ((TextMessageClient)client).sendTextMessage(psid, "Sure, here are all of your reservations.");
+            client.sendMassage(request);
+        }else{
+            ((TextMessageClient)client).sendTextMessage(psid, "Sorry i can`t find any reservations of yours.");
+        }
         request = new GettingStartedQuickReplyBuilder(psid,"Do you want to add another one?").build();
         userService.setStatus(psid, MessangerUserStatus.GETTING_STARTED);
         userReservationService.deleteNotActiveReservations(psid);

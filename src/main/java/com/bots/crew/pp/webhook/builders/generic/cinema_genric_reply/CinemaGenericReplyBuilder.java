@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CinemaGenericReplyBuilder extends GenericReplyBuilder {
-    private List<Cinema> cinemas;
+    protected List<Cinema> cinemas;
     private CinemaGenericReplyElementsBuilder elementsBuilder;
 
     public CinemaGenericReplyBuilder(String psid, List<Cinema> cinemas) {
@@ -22,8 +22,7 @@ public class CinemaGenericReplyBuilder extends GenericReplyBuilder {
     protected List<GenericTamplateElement> getElements() {
         List<GenericTamplateElement> elements = new LinkedList<>();
         for (Cinema cinema : cinemas) {
-            elementsBuilder.setCinema(cinema);
-            elements.add(elementsBuilder.build());
+            elements.add(elementsBuilder.build(cinema));
         }
         return elements;
     }

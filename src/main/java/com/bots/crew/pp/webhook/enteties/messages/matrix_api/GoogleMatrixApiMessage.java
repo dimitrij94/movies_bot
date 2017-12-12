@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class GoogleMatrixApiRequest {
+public class GoogleMatrixApiMessage {
     @JsonProperty("destination_address")
     private List<String> destinationAddress;
     @JsonProperty("origin_address")

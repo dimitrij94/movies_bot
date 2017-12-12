@@ -1,6 +1,6 @@
 package com.bots.crew.pp.webhook.client;
 
-import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiRequest;
+import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,9 +16,9 @@ public class GoogleMatrixApiClient {
         this.restTemplate = restTemplate;
     }
 
-    public GoogleMatrixApiRequest getForDistance(String url) {
+    public GoogleMatrixApiMessage getForDistance(String url) {
         try {
-            return this.restTemplate.getForObject(url, GoogleMatrixApiRequest.class);
+            return this.restTemplate.getForObject(url, GoogleMatrixApiMessage.class);
         } catch (HttpClientErrorException e) {
             log.error(e.getResponseBodyAsString(), e);
             return null;

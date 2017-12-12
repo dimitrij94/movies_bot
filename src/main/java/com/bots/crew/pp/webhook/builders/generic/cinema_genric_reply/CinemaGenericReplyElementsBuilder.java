@@ -3,12 +3,18 @@ package com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply;
 import com.bots.crew.pp.webhook.builders.generic.GenericReplyElementsBuilder;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButton;
+import com.bots.crew.pp.webhook.enteties.request.GenericTamplateElement;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class CinemaGenericReplyElementsBuilder extends GenericReplyElementsBuilder {
     private Cinema cinema;
+
+    public GenericTamplateElement build(Cinema cinema) {
+        this.setCinema(cinema);
+        return super.build();
+    }
 
     @Override
     protected String getTitle() {

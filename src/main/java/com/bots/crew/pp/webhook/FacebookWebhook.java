@@ -46,7 +46,7 @@ public class FacebookWebhook {
                                       @RequestParam("hub.challenge") String challange,
                                       @RequestParam("hub.mode") String mode) {
         Hub hub = new Hub(mode, verifyToken, challange);
-        if (hub.getMode() != null && hub.getVerificationToken() != null) {
+        if (hub.getMode() != null && hub.getVerificationToken() != null && hub.getVerificationToken().equals(this.verifycationKey)) {
             log.debug(String.format("connection established with %s", hub.getVerificationToken()));
             return ResponseEntity.ok(hub.getChallenge());
         }
