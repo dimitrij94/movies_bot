@@ -93,8 +93,9 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
         AbstractMessagingObserver observer = this.persistantMenuObservers.get(menu.getOptions());
         UserReservation updatedReservation = observer.changeState(value, reservation);
         observer.forwardResponse(updatedReservation);
-
-        observer = this.observers.get(user.getPreviousStatus());
+        MessangerUserStatus userStatus = user.getPreviousStatus();
+        userStatus = userStatus.equals(MessangerUserStatus.SELECT_TIME) ? MessangerUserStatus.GETTING_STARTED : userStatus;
+        observer = this.observers.get(userStatus);
         observer.forwardResponse(updatedReservation);
         return updatedReservation;
     }
