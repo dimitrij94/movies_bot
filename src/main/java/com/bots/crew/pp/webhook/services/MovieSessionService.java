@@ -1,6 +1,5 @@
 package com.bots.crew.pp.webhook.services;
 
-import com.bots.crew.pp.webhook.enteties.db.Movie;
 import com.bots.crew.pp.webhook.enteties.db.MovieSession;
 import com.bots.crew.pp.webhook.enteties.db.MovieTechnology;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
@@ -8,7 +7,6 @@ import com.bots.crew.pp.webhook.repositories.MovieSessionRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -53,14 +51,6 @@ public class MovieSessionService {
 
     private boolean isReservationForToday(UserReservation reservation) {
         return UtilsService.convertToLocalDate(reservation.getSessionDate()).getDayOfMonth() == LocalDate.now().getDayOfMonth();
-    }
-
-    public int countSessionsBySessionDate(LocalDate userDate, Movie movie) {
-        return repository.countBySessionDateAndMovie(UtilsService.convertToDate(userDate), movie);
-    }
-
-    public int countSessionsToday(Date userDate) {
-        return repository.countBySessionDateAndSessionTime(userDate);
     }
 /*
     public List<Date> findAvailableSessionDatesForReservation() {

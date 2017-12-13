@@ -1,6 +1,7 @@
 package com.bots.crew.pp.webhook.enteties.db;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,6 @@ public class MovieSession {
     @Column(name = "session_time")
     private Date sessionTime;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "session_date")
     private Date sessionDate;
 
@@ -88,7 +88,6 @@ public class MovieSession {
     public void setReservations(List<UserReservation> reservations) {
         this.reservations = reservations;
     }
-
 
     public Date getSessionDate() {
         return sessionDate;

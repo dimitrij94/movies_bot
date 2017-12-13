@@ -50,7 +50,7 @@ public class SendLocationObserver extends AbstractMessagingObserver {
     @Override
     public void forwardResponse(UserReservation reservation) {
         String psid = reservation.getUser().getPsid();
-        List<Cinema> cinemas = this.cinemaService.findCinemasForMovieToday(reservation.getMovie().getId());
+        List<Cinema> cinemas = this.cinemaService.findCinemasForMovie(reservation.getMovie().getId());
         List<CinemaGoogleMatrixApiMessage> distances = this.cinemaService.findCinemasOrderByDistanceTo(cinemas,
                 reservation.getLongitude(), reservation.getLatitude());
 

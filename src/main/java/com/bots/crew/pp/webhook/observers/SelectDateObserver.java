@@ -2,24 +2,25 @@ package com.bots.crew.pp.webhook.observers;
 
 import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.builders.quick.SelectCinemaRequestBuilder;
+import com.bots.crew.pp.webhook.client.MessageClient;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
+import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Message;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
-import com.bots.crew.pp.webhook.services.*;
+import com.bots.crew.pp.webhook.services.CinemaService;
+import com.bots.crew.pp.webhook.services.MessengerUserService;
+import com.bots.crew.pp.webhook.services.UserReservationService;
+import com.bots.crew.pp.webhook.services.UtilsService;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.CharBuffer;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,15 +29,12 @@ import java.util.regex.Pattern;
 public class SelectDateObserver extends AbstractMessagingObserver {
     private UserReservationService userReservationService;
     private CinemaService cinemaService;
-    private Pattern datePattern = Pattern.compile("(?<month>[\\d]{1,2})-(?<day>[\\d]{1,2})-(?<year>[\\d]{4})");
-    private MovieSessionService sessionService;
+    private Pattern datePattern = Pattern.compile("(?<month>[\\d]{2})-(?<day>[\\d]{2})-(?<year>[\\d]{4})");
 
-    public SelectDateObserver(FacebookMessagingHandler handler, TextMessageClient client, MessengerUserService userService, UserReservationService userReservationService, CinemaService cinemaService, MovieSessionService sessionService) throws IOException {
+    public SelectDateObserver(FacebookMessagingHandler handler, TextMessageClient client, MessengerUserService userService, UserReservationService userReservationService, CinemaService cinemaService) {
         super(handler, client, userService);
         this.userReservationService = userReservationService;
         this.cinemaService = cinemaService;
-        this.sessionService = sessionService;
-
     }
 
     @Override
@@ -46,33 +44,27 @@ public class SelectDateObserver extends AbstractMessagingObserver {
 
     @Override
     public UserReservation changeState(Messaging message, UserReservation reservation) {
-        LocalDate userDate = getUserInput(message);
-        if (userDate != null) {
-            int numOfMovieSessionsAt = sessionService.countSessionsBySessionDate(userDate, reservation.getMovie());
-            if (numOfMovieSessionsAt > 0) {
-                return userReservationService.saveReservationForDate(reservation, UtilsService.convertToDate(userDate));
-            }
-            ((TextMessageClient) client).sendTextMessage(reservation.getUser().getPsid(),
-                    "Sorry there are no movie sessions that i am aware of at this date. Please try another one");
+        Date userDate = getUserInput(message);
+        if (userDate == null) {
             return null;
         } else {
-            return null;
+            return userReservationService.saveReservationForDate(reservation, userDate);
         }
     }
 
-
     @Override
     public void forwardResponse(UserReservation reservation) {
-        List<Cinema> cinemas = cinemaService.findCinemasForMovieSessionAtDate(reservation.getMovie().getId(), UtilsService.convertToLocalDate(reservation.getSessionDate()));
+        List<Cinema> cinemas = cinemaService.findCinemasForMovie(reservation.getMovie().getId());
         MessagingRequest request = new SelectCinemaRequestBuilder(reservation.getUser().getPsid(), cinemas).build();
         client.sendMassage(request);
         userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_CINEMA_QUICK_LIST, getObservableStatus());
     }
 
-    private LocalDate getUserInput(Messaging message) {
+    private Date getUserInput(Messaging message) {
         Message m = message.getMessage();
         String psid = message.getSender().getId();
         QuickReply quickReply = m.getQuickReply();
+        Date userDate;
         LocalDate localDate;
         if (quickReply != null) {
             localDate = convertUserPayload(quickReply);
@@ -82,7 +74,8 @@ public class SelectDateObserver extends AbstractMessagingObserver {
         if (localDate == null || !validateUserInout(localDate, psid)) {
             return null;
         }
-        return localDate;
+        userDate = UtilsService.convertToDate(localDate);
+        return userDate;
     }
 
 
@@ -96,7 +89,7 @@ public class SelectDateObserver extends AbstractMessagingObserver {
         if (userDate.isAfter(LocalDate.now())) {
             return true;
         }
-        ((TextMessageClient) client).sendTextMessage(psid, "Sorry i am a movie tickets booking bot, not a time travel machine. " +
+        ((TextMessageClient) client).sendTextMessage(psid, "Sorry i am movie tickets booking bot, not a time travel machine. " +
                 "Select a date that is in the future");
         return false;
     }
