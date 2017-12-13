@@ -3,12 +3,10 @@ package com.bots.crew.pp.webhook.observers.persistant_menu;
 import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.PersistantMenuOptions;
 import com.bots.crew.pp.webhook.builders.generic.user_reservation.UserReservationdRequestBuilder;
-import com.bots.crew.pp.webhook.builders.quick.GettingStartedQuickReplyBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
-import com.bots.crew.pp.webhook.enteties.persistant_menu.PersistantMenuMessage;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
 import com.bots.crew.pp.webhook.services.MessengerUserService;
@@ -29,6 +27,8 @@ public class ShowAllReservationsObserver extends PersistentMenuAbstractMessaging
 
     @Override
     public UserReservation changeState(Messaging message, UserReservation reservation) {
+        //MessengerUser user = reservation.getUser();
+        //userService.setStatus(user, user.getStatus(), getObservableStatus());
         return reservation;
     }
 
@@ -48,17 +48,18 @@ public class ShowAllReservationsObserver extends PersistentMenuAbstractMessaging
         }
 
     }
-/*
-    private void drop() {
-        request = new GettingStartedQuickReplyBuilder(psid, "Do you want to add another one?").build();
-        userService.setStatus(user, MessangerUserStatus.GETTING_STARTED, user.getStatus());
-        userReservationService.deleteNotActiveReservations(psid);
-        client.sendMassage(request);
-    }
-*/
+
+    /*
+        private void drop() {
+            request = new GettingStartedQuickReplyBuilder(psid, "Do you want to add another one?").build();
+            userService.setStatus(user, MessangerUserStatus.GETTING_STARTED, user.getStatus());
+            userReservationService.deleteNotActiveReservations(psid);
+            client.sendMassage(request);
+        }
+    */
     @Override
     public MessangerUserStatus getObservableStatus() {
-        return null;
+        return MessangerUserStatus.SHOW_RESERVATIONS;
     }
 
     @Override

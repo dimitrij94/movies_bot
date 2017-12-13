@@ -36,7 +36,7 @@ public class FacebookWebhook {
                            FacebookMessagingHandler handler) {
         this.userService = userService;
         this.objectMapper = objectMapper;
-        verifycationKey = environment.getProperty("social.facebook.verification");
+        verifycationKey = environment.getProperty("social.facebook.app.verification");
         testAppAccessToken = environment.getProperty("facebook.test.page.access.token");
         this.handler = handler;
     }

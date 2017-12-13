@@ -24,12 +24,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class SelecySessionDateObserver extends AbstractMessagingObserver {
+public class SelectDateObserver extends AbstractMessagingObserver {
     private UserReservationService userReservationService;
     private CinemaService cinemaService;
     private Pattern datePattern = Pattern.compile("(?<month>[\\d]{2})-(?<day>[\\d]{2})-(?<year>[\\d]{4})");
 
-    public SelecySessionDateObserver(FacebookMessagingHandler handler, TextMessageClient client, MessengerUserService userService, UserReservationService userReservationService, CinemaService cinemaService) {
+    public SelectDateObserver(FacebookMessagingHandler handler, TextMessageClient client, MessengerUserService userService, UserReservationService userReservationService, CinemaService cinemaService) {
         super(handler, client, userService);
         this.userReservationService = userReservationService;
         this.cinemaService = cinemaService;
@@ -84,10 +84,10 @@ public class SelecySessionDateObserver extends AbstractMessagingObserver {
 
     private boolean validateUserInout(LocalDate userDate, String psid) {
         if (userDate.isAfter(LocalDate.now())) {
-            ((TextMessageClient) client).sendTextMessage(psid, "Sorry i am movie tickets booking bot, not a time travel machine.");
-            return false;
+            return true;
         }
-        return true;
+        ((TextMessageClient) client).sendTextMessage(psid, "Sorry i am movie tickets booking bot, not a time travel machine.");
+        return false;
     }
 
     private LocalDate convertUserInout(String userDate) {

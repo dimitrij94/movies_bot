@@ -7,6 +7,7 @@ import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.persistant_menu.PersistantMenuMessage;
+import com.bots.crew.pp.webhook.enteties.properties.persistent_menu.PersistentMenu;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.observers.AbstractMessagingObserver;
 import com.bots.crew.pp.webhook.observers.persistant_menu.PersistentMenuAbstractMessagingObserver;
@@ -68,38 +69,51 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
 
     @Override
     public void notify(Messaging value, MessengerUser user) {
+        UserReservation reservation = getUserReservation(user);
+        PersistantMenuMessage menu = persistantMenuService.matchesPersistantMenuSignature(value);
+        if (menu == null) {
+            notifyMessengerObservers(user, value, reservation);
+        } else {
+            notifyPersistentMenuObservers(user, value, reservation, menu);
+        }
+    }
+
+    private UserReservation notifyMessengerObservers(MessengerUser user, Messaging value, UserReservation reservation) {
+        AbstractMessagingObserver observer = this.observers.get(user.getStatus());
+        UserReservation updatedReservation;
+        try {
+            updatedReservation = observer.changeState(value, reservation);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            updatedReservation = null;
+        }
+        if (updatedReservation != null) {
+            observer.forwardResponse(updatedReservation);
+        } else {
+            observer = this.observers.get(user.getPreviousStatus());
+            observer.forwardResponse(reservation);
+        }
+        return updatedReservation;
+    }
+
+    private UserReservation notifyPersistentMenuObservers(MessengerUser user, Messaging value, UserReservation reservation, PersistantMenuMessage menu) {
+        AbstractMessagingObserver observer = this.persistantMenuObservers.get(menu.getOptions());
+        UserReservation updatedReservation = observer.changeState(value, reservation);
+        observer.forwardResponse(updatedReservation);
+
+        observer = this.observers.get(user.getPreviousStatus());
+        observer.forwardResponse(updatedReservation);
+        return updatedReservation;
+    }
+
+    private UserReservation getUserReservation(MessengerUser user) {
         UserReservation reservation;
         if (user.getStatus().equals(MessangerUserStatus.GETTING_STARTED)) {
             reservation = reservationService.saveEmptyReservation(user);
         } else {
             reservation = reservationService.findUserLatestReservation(user.getPsid());
         }
-        UserReservation updatedReservation;
-        AbstractMessagingObserver observer;
-        PersistantMenuMessage menu = persistantMenuService.matchesPersistantMenuSignature(value);
-        if (menu == null) {
-            observer = this.observers.get(user.getStatus());
-            try {
-                updatedReservation = observer.changeState(value, reservation);
-            } catch (Throwable e) {
-                e.printStackTrace();
-                updatedReservation = null;
-            }
-            if (updatedReservation != null) {
-                observer.forwardResponse(updatedReservation);
-            } else {
-                observer = this.observers.get(user.getPreviousStatus());
-                observer.forwardResponse(reservation);
-            }
-        } else {
-            observer = this.persistantMenuObservers.get(menu.getOptions());
-            updatedReservation = observer.changeState(value, reservation);
-            observer.forwardResponse(updatedReservation);
-
-            observer = this.observers.get(user.getPreviousStatus());
-            observer.forwardResponse(updatedReservation);
-        }
-
+        return reservation;
     }
 
     private void rollback() {

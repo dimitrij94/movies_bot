@@ -13,5 +13,5 @@ public enum MessangerUserStatus {
     SELECT_NUMBER_OF_TICKETS,
     SELECT_TECHNOLOGY,
     SELECT_TIME,
-    RESERVATION_SHOWN,
+    SHOW_RESERVATIONS,
 }
