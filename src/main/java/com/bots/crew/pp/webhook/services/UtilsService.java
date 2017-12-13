@@ -1,9 +1,7 @@
 package com.bots.crew.pp.webhook.services;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -21,10 +19,12 @@ public class UtilsService {
     }
 
     public static LocalTime convertToLocalTime(Date date) {
-        return LocalTime.parse(date.toString(), timeFormatter);
+        return LocalTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 
     public static String convertToString(Date date){
         return formatter.format(date);
     }
+
+
 }
