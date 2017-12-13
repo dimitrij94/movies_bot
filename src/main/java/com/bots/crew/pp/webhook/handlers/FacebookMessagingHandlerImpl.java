@@ -1,7 +1,6 @@
 package com.bots.crew.pp.webhook.handlers;
 
 import com.bots.crew.pp.webhook.MessangerUserStatus;
-import com.bots.crew.pp.webhook.PersistantMenuOptions;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
@@ -31,7 +30,7 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
     private final String pageAccessKey;
     private Logger log = LoggerFactory.getLogger(FacebookMessagingHandlerImpl.class);
     private Map<MessangerUserStatus, AbstractMessagingObserver> observers = new EnumMap<>(MessangerUserStatus.class);
-    private Map<PersistantMenuOptions, PersistentMenuAbstractMessagingObserver> persistantMenuObservers = new EnumMap<>(PersistantMenuOptions.class);
+    private Map<MessangerUserStatus, PersistentMenuAbstractMessagingObserver> persistantMenuObservers = new EnumMap<>(MessangerUserStatus.class);
     private PersistantMenuService persistantMenuService;
     private UserReservationService reservationService;
     private MessengerUserService userService;
@@ -54,8 +53,9 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
 
     @Override
     @Async
-    public void execute(JsonNode json, MessengerUser user) throws IOException {
+    public void execute(JsonNode json) throws IOException {
         Messaging messaging = mapper.treeToValue(json, messagingClass);
+        MessengerUser user = userService.createIfNotExists(messaging);
         this.notify(messaging, user);
     }
 
@@ -68,6 +68,11 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
         } else {
             notifyPersistentMenuObservers(user, value, reservation, menu);
         }
+    }
+
+    @Override
+    public void addPersistantMenuObserver(PersistentMenuAbstractMessagingObserver observer, MessangerUserStatus observableStatus) {
+        this.persistantMenuObservers.put(observableStatus, observer);
     }
 
     private UserReservation notifyMessengerObservers(MessengerUser user, Messaging value, UserReservation reservation) {
@@ -110,18 +115,9 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
         return reservation;
     }
 
-    private void rollback() {
-
-    }
-
     @Override
     public void addObserver(AbstractMessagingObserver observer, MessangerUserStatus observableStatus) {
         this.observers.put(observableStatus, observer);
-    }
-
-    @Override
-    public void addObserver(PersistentMenuAbstractMessagingObserver observer, PersistantMenuOptions menuOption) {
-        this.persistantMenuObservers.put(menuOption, observer);
     }
 
     @Override

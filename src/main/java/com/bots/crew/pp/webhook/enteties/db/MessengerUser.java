@@ -23,8 +23,9 @@ public class MessengerUser {
     public MessengerUser() {
     }
 
-    public MessengerUser(String psid, MessangerUserStatus status) {
+    public MessengerUser(String psid, MessangerUserStatus status, MessangerUserStatus previousStatus) {
         this.status = status;
+        this.previousStatus = previousStatus;
         this.psid = psid;
     }
 

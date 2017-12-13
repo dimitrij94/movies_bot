@@ -1,7 +1,6 @@
 package com.bots.crew.pp.webhook.observers.persistant_menu;
 
 import com.bots.crew.pp.webhook.MessangerUserStatus;
-import com.bots.crew.pp.webhook.PersistantMenuOptions;
 import com.bots.crew.pp.webhook.builders.generic.user_reservation.UserReservationdRequestBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
@@ -62,8 +61,4 @@ public class ShowAllReservationsObserver extends PersistentMenuAbstractMessaging
         return MessangerUserStatus.SHOW_RESERVATIONS;
     }
 
-    @Override
-    protected PersistantMenuOptions getObservableOption() {
-        return PersistantMenuOptions.SHOW_ALL_RESERVATIONS;
-    }
 }

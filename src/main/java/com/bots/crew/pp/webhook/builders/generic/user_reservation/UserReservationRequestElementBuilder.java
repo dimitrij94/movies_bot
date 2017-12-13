@@ -6,6 +6,7 @@ import com.bots.crew.pp.webhook.builders.generic.list_or_find.MoviesRequestEleme
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButton;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateElement;
+import com.bots.crew.pp.webhook.services.UtilsService;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class UserReservationRequestElementBuilder extends GenericReplyElementsBuilder {
     private UserReservation userReservation;
-    private SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+
 
     public GenericTamplateElement build(UserReservation userReservation) {
         this.userReservation = userReservation;
@@ -27,7 +28,7 @@ public class UserReservationRequestElementBuilder extends GenericReplyElementsBu
 
     @Override
     protected String getSubtitle() {
-        return "At: " + formatter.format(userReservation.getSession().getSessionTime());
+        return "At: " + UtilsService.convertToString(userReservation.getSession().getSessionTime());
     }
 
     @Override

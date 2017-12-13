@@ -5,6 +5,7 @@ import com.bots.crew.pp.webhook.builders.quick.SelectCinemaRequestBuilder;
 import com.bots.crew.pp.webhook.client.MessageClient;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
+import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Message;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
@@ -17,6 +18,7 @@ import com.bots.crew.pp.webhook.services.UserReservationService;
 import com.bots.crew.pp.webhook.services.UtilsService;
 import org.springframework.stereotype.Component;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +56,8 @@ public class SelectDateObserver extends AbstractMessagingObserver {
     public void forwardResponse(UserReservation reservation) {
         List<Cinema> cinemas = cinemaService.findCinemasForMovie(reservation.getMovie().getId());
         MessagingRequest request = new SelectCinemaRequestBuilder(reservation.getUser().getPsid(), cinemas).build();
-        client.sendMassage(request);userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_CINEMA_QUICK_LIST, getObservableStatus());
+        client.sendMassage(request);
+        userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_CINEMA_QUICK_LIST, getObservableStatus());
     }
 
     private Date getUserInput(Messaging message) {
@@ -66,7 +69,7 @@ public class SelectDateObserver extends AbstractMessagingObserver {
         if (quickReply != null) {
             localDate = convertUserPayload(quickReply);
         } else {
-            localDate = convertUserInout(m.getText());
+            localDate = convertUserInout(m.getText(), psid);
         }
         if (localDate == null || !validateUserInout(localDate, psid)) {
             return null;
@@ -86,18 +89,24 @@ public class SelectDateObserver extends AbstractMessagingObserver {
         if (userDate.isAfter(LocalDate.now())) {
             return true;
         }
-        ((TextMessageClient) client).sendTextMessage(psid, "Sorry i am movie tickets booking bot, not a time travel machine.");
+        ((TextMessageClient) client).sendTextMessage(psid, "Sorry i am movie tickets booking bot, not a time travel machine. " +
+                "Select a date that is in the future");
         return false;
     }
 
-    private LocalDate convertUserInout(String userDate) {
+    private LocalDate convertUserInout(String userDate, String psid) {
         Matcher matcher = datePattern.matcher(userDate);
         if (matcher.matches()) {
-            return LocalDate.of(
-                    Integer.parseInt(matcher.group("year")),
-                    Integer.parseInt(matcher.group("month")),
-                    Integer.parseInt(matcher.group("day"))
-            );
+            try {
+                return LocalDate.of(
+                        Integer.parseInt(matcher.group("year")),
+                        Integer.parseInt(matcher.group("month")),
+                        Integer.parseInt(matcher.group("day"))
+                );
+            } catch (DateTimeException e) {
+                ((TextMessageClient) client).sendTextMessage(psid, "This is not valid date, please check with your calender.");
+                return null;
+            }
         }
         return null;
     }

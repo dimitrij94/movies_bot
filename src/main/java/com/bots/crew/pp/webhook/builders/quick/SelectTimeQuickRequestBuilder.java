@@ -7,6 +7,7 @@ import com.bots.crew.pp.webhook.enteties.db.MovieSession;
 import com.bots.crew.pp.webhook.enteties.recipient.Recipient;
 import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.enteties.request.QuickReplyRequestContent;
+import com.bots.crew.pp.webhook.services.UtilsService;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +19,6 @@ import java.util.Locale;
 public class SelectTimeQuickRequestBuilder extends QuickReplyBuilder {
     private MessengerUser user;
     private List<MovieSession> sessions;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault());
 
     public SelectTimeQuickRequestBuilder(MessengerUser user, List<MovieSession> sessions) {
         this.user = user;
@@ -38,15 +38,12 @@ public class SelectTimeQuickRequestBuilder extends QuickReplyBuilder {
         sessionTimes.add(new QuickReply("Back","back"));
         for (MovieSession s : sessions) {
             Date sTime = s.getSessionTime();
-            String time = convertToLocalDate(sTime).toString();
+            String time = UtilsService.convertToLocalTime(sTime).toString();
             sessionTimes.add(new QuickReply(time, s.getId()));
         }
         requestContent.setQuickReplies(sessionTimes);
         return requestContent;
     }
 
-    private LocalTime convertToLocalDate(Date date) {
-        LocalTime localTime = LocalTime.parse(date.toString(), formatter);
-        return localTime;
-    }
+
 }

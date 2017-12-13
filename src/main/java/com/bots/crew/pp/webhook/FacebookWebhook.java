@@ -57,8 +57,7 @@ public class FacebookWebhook {
     public ResponseEntity webhook(HttpServletRequest request) throws IOException, ServletException {
         JsonNode root = objectMapper.readTree(request.getInputStream());
         JsonNode webhookEvent = root.path("entry").path(0).path("messaging").path(0);
-        MessengerUser user = userService.storeInSessionPSID(request, webhookEvent);
-        handler.execute(webhookEvent, user);
+        handler.execute(webhookEvent);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

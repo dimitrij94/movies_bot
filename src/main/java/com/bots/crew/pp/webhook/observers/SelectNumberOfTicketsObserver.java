@@ -62,7 +62,7 @@ public class SelectNumberOfTicketsObserver extends AbstractMessagingObserver {
         if (numOfTickets == null) return null;
         int maxNumberOfTickets = this.movieSessionService.findMaxNumberOfTicketsForUserLastReservation(reservation.getId());
         if (numOfTickets <= maxNumberOfTickets && numOfTickets > 0) {
-            reservationService.saveNumberOfTickets(reservation, maxNumberOfTickets);
+            reservationService.saveNumberOfTickets(reservation, numOfTickets);
             return reservation;
         } else {
             return null;
