@@ -2,7 +2,7 @@
   /* WebHookEvent */
   "object": "page",
   "entry": [
-    /* EventEntry */
+    /* MessagingEventEntry */
     {
       "id": "2039927066252098",
       "time": 1512556868727,

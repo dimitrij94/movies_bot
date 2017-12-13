@@ -62,7 +62,7 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
     @Override
     public void notify(Messaging value, MessengerUser user) {
         UserReservation reservation = getUserReservation(user);
-        PersistantMenuMessage menu = persistantMenuService.matchAndReturn(value);
+        PersistantMenuMessage menu = persistantMenuService.matchesPersistantMenuSignature(value);
         if (menu == null) {
             notifyMessengerObservers(user, value, reservation);
         } else {

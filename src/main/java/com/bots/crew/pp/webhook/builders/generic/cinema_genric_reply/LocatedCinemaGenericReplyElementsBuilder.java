@@ -1,4 +1,4 @@
-package com.bots.crew.pp.webhook.builders.generic.cinema;
+package com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply;
 
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
 import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiMessage;

@@ -1,11 +1,14 @@
-package com.bots.crew.pp.webhook.builders.generic.cinema;
+package com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply;
 
+import com.bots.crew.pp.webhook.enteties.db.Cinema;
 import com.bots.crew.pp.webhook.enteties.messages.CinemaGoogleMatrixApiMessage;
+import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateElement;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LocatedCinemaGenericReplyBuilder extends CinemaGenericReplyBuilder {

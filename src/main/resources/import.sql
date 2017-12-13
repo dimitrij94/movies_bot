@@ -1,6 +1,6 @@
 
 use movies_bot;
-INSERT INTO messenger_user VALUES ('1414885871972397', 0,0);
+INSERT INTO messenger_user VALUES ('1414885871972397', 0);
 
 insert into movie_genre(id, name) values(1, 'Comedy');
 insert into movie_genre(id, name) values(2, 'Action');

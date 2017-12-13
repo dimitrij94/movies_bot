@@ -1,7 +1,7 @@
 package com.bots.crew.pp.webhook.observers.persistant_menu;
 
 import com.bots.crew.pp.webhook.MessangerUserStatus;
-import com.bots.crew.pp.webhook.builders.generic.reservation.UserReservationdRequestBuilder;
+import com.bots.crew.pp.webhook.builders.generic.user_reservation.UserReservationdRequestBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
