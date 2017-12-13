@@ -13,11 +13,10 @@ import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
 import com.bots.crew.pp.webhook.repositories.MovieGenreRepository;
-import com.bots.crew.pp.webhook.services.MessengerUserService;
-import com.bots.crew.pp.webhook.services.MovieService;
-import com.bots.crew.pp.webhook.services.UserReservationService;
+import com.bots.crew.pp.webhook.services.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -25,16 +24,18 @@ public class SelectListOrFindMovies extends AbstractMessagingObserver {
     private MovieService movieService;
     private MovieGenreRepository genreRepository;
     private UserReservationService userReservationService;
+    private MovieSessionService sessionService;
 
     public SelectListOrFindMovies(FacebookMessagingHandler handler,
                                   TextMessageClient client,
                                   MessengerUserService userService,
                                   MovieService movieService,
-                                  MovieGenreRepository genreRepository, UserReservationService userReservationService) {
+                                  MovieGenreRepository genreRepository, UserReservationService userReservationService, MovieSessionService sessionService) {
         super(handler, client, userService);
         this.movieService = movieService;
         this.genreRepository = genreRepository;
         this.userReservationService = userReservationService;
+        this.sessionService = sessionService;
     }
 
 
@@ -49,8 +50,15 @@ public class SelectListOrFindMovies extends AbstractMessagingObserver {
         else replyPayload = message.getMessage().getText().toLowerCase();
 
         if (replyPayload.equals("list")) {
-            reservation = userReservationService.saveReservationForToday(reservation, user);
-            return reservation;
+            if (sessionService.countSessionsToday(
+                    UtilsService.convertToDate(LocalDate.now())) > 0) {
+                reservation = userReservationService.saveReservationForToday(reservation, user);
+                return reservation;
+            } else {
+                ((TextMessageClient) client).sendTextMessage(user.getPsid(), "Sorry it seams there are no movie sessions for today");
+                return null;
+            }
+
         } else if (replyPayload.equals("find")) {
             return reservation;
         }

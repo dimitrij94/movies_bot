@@ -46,6 +46,7 @@ public class SelectCinemaObserver extends AbstractMessagingObserver {
             } else {
                 int cinemaId = Integer.parseInt(payload);
                 userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_NUMBER_OF_TICKETS, getObservableStatus());
+
                 return userReservationService.saveCinema(cinemaId, reservation);
             }
         }

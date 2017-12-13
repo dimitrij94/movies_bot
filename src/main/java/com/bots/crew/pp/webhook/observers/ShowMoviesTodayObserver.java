@@ -4,7 +4,6 @@ import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.builders.quick.SelectCinemaRequestBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
-import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.messages.Postback;
@@ -44,7 +43,7 @@ public class ShowMoviesTodayObserver extends AbstractMessagingObserver {
     @Override
     public void forwardResponse(UserReservation userReservation) {
         ((TextMessageClient) client).sendTextMessage(userReservation.getUser().getPsid(), "Great choice, i realy like this movie.");
-        List<Cinema> cinemas = cinemaService.findCinemasForMovie(userReservation.getMovie().getId());
+        List<Cinema> cinemas = cinemaService.findCinemasForMovieToday(userReservation.getMovie().getId());
         MessagingRequest request = new SelectCinemaRequestBuilder(userReservation.getUser().getPsid(), cinemas).build();
         client.sendMassage(request);
         this.userService.setStatus(userReservation.getUser(), MessangerUserStatus.SELECT_CINEMA_QUICK_LIST, getObservableStatus());
