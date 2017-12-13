@@ -63,7 +63,7 @@ public class SelectDateObserver extends AbstractMessagingObserver {
 
     @Override
     public void forwardResponse(UserReservation reservation) {
-        List<Cinema> cinemas = cinemaService.findCinemasForMovieSessionAtDate(reservation.getMovie().getId(), UtilsService.convertToLocalDate(reservation.getSessionDate()));
+        List<Cinema> cinemas = cinemaService.findCinemasForMovieSessionAtDate(reservation.getMovie().getId(), reservation.getSessionDate());
         MessagingRequest request = new SelectCinemaRequestBuilder(reservation.getUser().getPsid(), cinemas).build();
         client.sendMassage(request);
         userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_CINEMA_QUICK_LIST, getObservableStatus());

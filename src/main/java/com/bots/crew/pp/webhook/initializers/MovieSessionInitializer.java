@@ -48,7 +48,9 @@ public class MovieSessionInitializer implements InitializingBean {
                     session.setSeatsLeft(seatsLeft[j - 1]);
                     for (int d = 0; d < 4; d++) {
                         LocalDate date = LocalDate.of(sessionDate.getYear(), sessionDate.getMonth(), sessionDate.getDayOfMonth() + d);
+
                         session.setSessionDate(UtilsService.convertToDate(date));
+
                         for (int t = 0; t < 4; t++) {
                             LocalTime time = LocalTime.of(hours[t], minutes[t]);
                             Date sessionTime = Date.from(time.atDate(LocalDate.of(sessionDate.getYear(), sessionDate.getMonth(), sessionDate.getDayOfMonth())).

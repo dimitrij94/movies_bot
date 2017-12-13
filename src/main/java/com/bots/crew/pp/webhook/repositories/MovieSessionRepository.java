@@ -26,20 +26,17 @@ public interface MovieSessionRepository extends JpaRepository<MovieSession, Inte
     @Query(value = "SELECT max(s.seats_left) FROM movie_session AS s INNER JOIN user_reservation AS r ON r.movie_id=s.movie_id AND r.cinema_id=s.cinema_id AND s.session_time>Now() AND s.session_date=r.session_date WHERE r.id=?1", nativeQuery = true)
     int findMaxNumberOfTicketsForUserLastReservation(int reservationId);
 
-    @Query(value = "SELECT DISTINCT ms.* FROM movie_session AS ms INNER JOIN user_reservation ur ON ms.cinema_id=ur.cinema_id AND ms.movie_id=ur.movie_id AND ur.id=?1 WHERE ms.session_time>NOW()", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT ms.* FROM movie_session AS ms INNER JOIN user_reservation ur ON ms.cinema_id=ur.cinema_id AND ms.movie_id=ur.movie_id AND ms.session_date=ur.session_date AND ur.id=?1 WHERE ms.session_time>NOW()", nativeQuery = true)
     List<MovieSession> findAllByMovieAndCinemaLaterToday(Integer userReservationId);
 
-    @Query(value = "SELECT DISTINCT s.* FROM movie_session AS s INNER JOIN movie_technology AS t INNER JOIN user_reservation AS r ON r.id=?1 AND r.movie_id = s.movie_id AND r.cinema_id = s.cinema_id AND s.technology_id = ?2 WHERE s.session_time> NOW() AND s.seats_left >= r.num_of_tickets", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT ms.* FROM movie_session AS ms INNER JOIN movie_technology AS t INNER JOIN user_reservation AS r ON r.id=?1 AND r.movie_id = ms.movie_id AND r.cinema_id = ms.cinema_id AND ms.technology_id = ?2 AND ms.session_date=r.session_date WHERE ms.session_time> NOW() AND ms.seats_left >= r.num_of_tickets", nativeQuery = true)
     List<MovieSession> findAllByMovieCinemaTechnologyLaterToday(int reservationId, int technologyId);
 
-    @Query(value = "SELECT DISTINCT ms.* FROM movie_session AS ms INNER JOIN user_reservation ur ON ms.cinema_id=ur.cinema_id AND ms.movie_id=ur.movie_id AND ur.id=?1", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT ms.* FROM movie_session AS ms INNER JOIN user_reservation ur ON ms.cinema_id=ur.cinema_id AND ms.movie_id=ur.movie_id AND ms.session_date=ur.session_date AND ur.id=?1", nativeQuery = true)
     List<MovieSession> findAllByMovieAndCinema(Integer userReservationId);
 
-    @Query(value = "SELECT DISTINCT s.* FROM movie_session AS s INNER JOIN movie_technology AS t INNER JOIN user_reservation AS r ON r.id=?1 AND r.movie_id = s.movie_id AND r.cinema_id = s.cinema_id AND s.technology_id = ?2 WHERE  s.seats_left >= r.num_of_tickets", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT ms.* FROM movie_session AS ms INNER JOIN movie_technology AS t INNER JOIN user_reservation AS r ON r.id=?1 AND r.movie_id = ms.movie_id AND r.cinema_id = ms.cinema_id AND ms.session_date=r.session_date AND ms.technology_id = ?2 WHERE  ms.seats_left >= r.num_of_tickets", nativeQuery = true)
     List<MovieSession> findAllByMovieCinemaTechnology(int reservationId, int technologyId);
-
-    @Query(value = "SELECT DISTINCT ms.session_date FROM movie_session AS ms", nativeQuery = true)
-    List<Date> findAvailableSessionDatesForReservation();
 
     int countBySessionDateAndMovie(Date userDate, Movie movie);
 

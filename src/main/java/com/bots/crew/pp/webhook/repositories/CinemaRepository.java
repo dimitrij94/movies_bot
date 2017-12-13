@@ -8,10 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 public interface CinemaRepository extends JpaRepository<Cinema, Integer> {
-    @Query(value = "SELECT DISTINCT c.* FROM cinema AS c INNER  JOIN movie_session AS ms ON ms.cinema_id=c.id WHERE c.id=?1 AND ms.session_date=DATE(NOW())", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT c.* FROM cinema AS c INNER  JOIN movie_session AS ms ON ms.cinema_id=c.id WHERE ms.movie_id=?1 AND ms.session_date=DATE(NOW())", nativeQuery = true)
     List<Cinema> findCinemaForMovieSessionToday(int movieId);
 
-    @Query(value = "SELECT DISTINCT c.* FROM cinema AS c INNER JOIN movie_session AS ms ON ms.cinema_id=c.id WHERE c.id=?1 AND ms.session_date=?2", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT c.* FROM cinema AS c INNER JOIN movie_session AS ms ON ms.cinema_id=c.id WHERE ms.movie_id=?1 AND ms.session_date=?2", nativeQuery = true)
     List<Cinema> findCinemaForMovieSessionAtDate(int movieId, Date date);
 
 

@@ -18,11 +18,12 @@ public class UtilsService {
         return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public static LocalTime convertToLocalTime(Date date) {
-        return LocalTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    public static LocalTime convertToLocalTime(Date time) {
+        Instant instant = Instant.ofEpochMilli(time.getTime());
+        return  LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalTime();
     }
 
-    public static String convertToString(Date date){
+    public static String convertToString(Date date) {
         return formatter.format(date);
     }
 

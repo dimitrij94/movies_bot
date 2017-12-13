@@ -7,6 +7,7 @@ import com.bots.crew.pp.webhook.repositories.CinemaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,8 +24,8 @@ public class CinemaService {
         return repository.findCinemaForMovieSessionToday(movieId);
     }
 
-    public List<Cinema> findCinemasForMovieSessionAtDate(int movieId, LocalDate date) {
-        return repository.findCinemaForMovieSessionAtDate(movieId, UtilsService.convertToDate(date));
+    public List<Cinema> findCinemasForMovieSessionAtDate(int movieId, Date date) {
+        return repository.findCinemaForMovieSessionAtDate(movieId, date);
     }
 
     public Cinema find(int cinemaId) {
