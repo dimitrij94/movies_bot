@@ -2,13 +2,10 @@ package com.bots.crew.pp.webhook.handlers;
 
 import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.PersistantMenuOptions;
-import com.bots.crew.pp.webhook.client.MessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.persistant_menu.PersistantMenuMessage;
-import com.bots.crew.pp.webhook.enteties.properties.persistent_menu.PersistentMenu;
-import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.observers.AbstractMessagingObserver;
 import com.bots.crew.pp.webhook.observers.persistant_menu.PersistentMenuAbstractMessagingObserver;
 import com.bots.crew.pp.webhook.services.MessengerUserService;
@@ -25,7 +22,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
@@ -36,24 +32,20 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
     private Logger log = LoggerFactory.getLogger(FacebookMessagingHandlerImpl.class);
     private Map<MessangerUserStatus, AbstractMessagingObserver> observers = new EnumMap<>(MessangerUserStatus.class);
     private Map<PersistantMenuOptions, PersistentMenuAbstractMessagingObserver> persistantMenuObservers = new EnumMap<>(PersistantMenuOptions.class);
-    private Map<String, MessagingRequest> usersLastRequestMap = new ConcurrentHashMap<>();
-    private MessageClient messageClient;
     private PersistantMenuService persistantMenuService;
-    private MessengerUserService userService;
     private UserReservationService reservationService;
+    private MessengerUserService userService;
 
     public FacebookMessagingHandlerImpl(ObjectMapper mapper,
                                         Environment env,
-                                        MessageClient messageClient1,
                                         PersistantMenuService persistantMenuService,
-                                        MessengerUserService userService,
-                                        UserReservationService reservationService) {
+                                        UserReservationService reservationService,
+                                        MessengerUserService userService) {
         this.mapper = mapper;
         this.pageAccessKey = env.getProperty("facebook.test.page.access.token");
-        this.messageClient = messageClient1;
         this.persistantMenuService = persistantMenuService;
-        this.userService = userService;
         this.reservationService = reservationService;
+        this.userService = userService;
     }
 
     public boolean isJsonTreeMatching(JsonNode messagingNode) {
@@ -90,6 +82,7 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
         if (updatedReservation != null) {
             observer.forwardResponse(updatedReservation);
         } else {
+            user = userService.find(user.getPsid());
             observer = this.observers.get(user.getPreviousStatus());
             observer.forwardResponse(reservation);
         }
@@ -121,11 +114,6 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
     }
 
     @Override
-    public MessagingRequest getUserLastRequest(String psid) {
-        return usersLastRequestMap.get(psid);
-    }
-
-    @Override
     public void addObserver(AbstractMessagingObserver observer, MessangerUserStatus observableStatus) {
         this.observers.put(observableStatus, observer);
     }
@@ -136,7 +124,7 @@ public class FacebookMessagingHandlerImpl implements FacebookMessagingHandler {
     }
 
     @Override
-    public void removeObserver(int observerId) {
+    public void removeObserver(MessangerUserStatus observerId) {
         observers.remove(observerId);
     }
 

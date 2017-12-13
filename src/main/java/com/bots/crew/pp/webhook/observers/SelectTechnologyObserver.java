@@ -33,23 +33,31 @@ public class SelectTechnologyObserver extends AbstractMessagingObserver {
     @Override
     public UserReservation changeState(Messaging message, UserReservation reservation) {
         String input = parseTechnology(message);
-        if (input.equals("any")) {
-            return reservation;
-        } else {
-            try {
-                int technologyId = Integer.parseInt(input);
-                MovieTechnology selectedTechnology = technologyService.find(technologyId);
-                reservation.setTechnology(selectedTechnology);
-                return userReservationService.save(reservation);
-            } catch (NumberFormatException e) {
+        switch (input) {
+            case "back":
+                userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_NUMBER_OF_TICKETS, MessangerUserStatus.SHOW_NEAREST_CINEMAS);
                 return null;
-            }
+            case "any":
+                if (reservation.getTechnology() != null) reservation.setTechnology(null);
+                userReservationService.save(reservation);
+                userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_TIME, getObservableStatus());
+                return reservation;
+            default:
+                try {
+                    int technologyId = Integer.parseInt(input);
+                    MovieTechnology selectedTechnology = technologyService.find(technologyId);
+                    reservation.setTechnology(selectedTechnology);
+                    userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_TIME, getObservableStatus());
+                    return userReservationService.save(reservation);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
         }
     }
 
     private String parseTechnology(Messaging message) {
         QuickReply quickReply = message.getMessage().getQuickReply();
-        return quickReply == null ? message.getMessage().getText() : (String) quickReply.getPayload();
+        return quickReply == null ? message.getMessage().getText().toLowerCase() : (String) quickReply.getPayload();
     }
 
     @Override
@@ -63,7 +71,6 @@ public class SelectTechnologyObserver extends AbstractMessagingObserver {
         }
         MessagingRequest request = new SelectTimeQuickRequestBuilder(reservation.getUser(), sessions).build();
         client.sendMassage(request);
-        userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_TIME, getObservableStatus());
     }
 
     @Override

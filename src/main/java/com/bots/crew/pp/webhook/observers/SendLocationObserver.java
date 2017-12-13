@@ -4,11 +4,9 @@ import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply.LocatedCinemaGenericReplyBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
-import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.CinemaGoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
-import com.bots.crew.pp.webhook.enteties.messages.matrix_api.GoogleMatrixApiMessage;
 import com.bots.crew.pp.webhook.enteties.payload.CoordinatesPayload;
 import com.bots.crew.pp.webhook.enteties.request.MessagingRequest;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
@@ -18,7 +16,6 @@ import com.bots.crew.pp.webhook.services.UserReservationService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class SendLocationObserver extends AbstractMessagingObserver {
@@ -43,7 +40,7 @@ public class SendLocationObserver extends AbstractMessagingObserver {
             CoordinatesPayload payload = message.getMessage().getAttachments().get(0).getPayload().getCoordinates();
             reservation.setLongitude(payload.getLongitude());
             reservation.setLatitude(payload.getLatitude());
-            this.userService.setStatus(reservation.getUser(), MessangerUserStatus.SELECT_NEAREST_CINEMA, getObservableStatus());
+            this.userService.setStatus(reservation.getUser(), MessangerUserStatus.SHOW_NEAREST_CINEMAS, getObservableStatus());
             return reservationService.save(reservation);
         } catch (NullPointerException e) {
             return null;

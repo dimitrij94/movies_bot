@@ -35,6 +35,7 @@ public class SelectTimeQuickRequestBuilder extends QuickReplyBuilder {
         QuickReplyRequestContent requestContent = new QuickReplyRequestContent();
         requestContent.setText("Please select time of the movie session");
         List<QuickReply> sessionTimes = new LinkedList<>();
+        sessionTimes.add(new QuickReply("Back","back"));
         for (MovieSession s : sessions) {
             Date sTime = s.getSessionTime();
             String time = convertToLocalDate(sTime).toString();

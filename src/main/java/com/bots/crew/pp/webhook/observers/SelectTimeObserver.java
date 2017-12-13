@@ -6,8 +6,10 @@ import com.bots.crew.pp.webhook.builders.ReplyBuilder;
 import com.bots.crew.pp.webhook.builders.generic.list_or_find.MoviesRequestBuilder;
 import com.bots.crew.pp.webhook.builders.quick.GettingStartedQuickReplyBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
+import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.Movie;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
+import com.bots.crew.pp.webhook.enteties.messages.Message;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.request.QuickReply;
 import com.bots.crew.pp.webhook.handlers.FacebookMessagingHandler;
@@ -39,13 +41,34 @@ public class SelectTimeObserver extends AbstractMessagingObserver {
 
     @Override
     public UserReservation changeState(Messaging message, UserReservation reservation) {
-        QuickReply quickReply = message.getMessage().getQuickReply();
-        if (quickReply != null) {
+        Message messageContent = message.getMessage();
+        QuickReply quickReply = messageContent.getQuickReply();
+
+        if (quickReply == null) {
+            String text = messageContent.getText();
+            if (text != null && text.equals("back")) {
+                setBackStatus(reservation.getUser());
+                return null;
+            }
+        } else {
+            if (quickReply.getPayload().equals("back")) {
+                setBackStatus(reservation.getUser());
+                return null;
+            }
             int sessionId = Integer.parseInt((String) quickReply.getPayload());
             reservationService.activateReservation(reservation);
             return reservationService.updateForMovieSession(reservation, sessionId);
         }
         return null;
+    }
+
+
+    private void setBackStatus(MessengerUser user) {
+        userService.setStatus(user, MessangerUserStatus.SELECT_TECHNOLOGY, MessangerUserStatus.SELECT_NUMBER_OF_TICKETS);
+    }
+
+    private boolean isBackCommand() {
+        return false;
     }
 
     @Override

@@ -29,6 +29,7 @@ public class SelectTechnologyReplyBuilder extends QuickReplyBuilder {
         requestContent.setText("Great! Now how would you prefer to watch this movie?");
         List<QuickReply> requestPayload = new LinkedList<>();
         requestPayload.add(new QuickReply("Any", "any"));
+        requestPayload.add(new QuickReply("Back", "back"));
         for (MovieTechnology tech : technologies)
             requestPayload.add(new QuickReply(tech.getName(), tech.getId()));
         requestContent.setQuickReplies(requestPayload);

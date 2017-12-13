@@ -3,7 +3,6 @@ package com.bots.crew.pp.webhook.observers;
 import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.builders.quick.SelectNumberOfTicketsRequestBuilder;
 import com.bots.crew.pp.webhook.client.MessageClient;
-import com.bots.crew.pp.webhook.enteties.db.MessengerUser;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.messages.Messaging;
 import com.bots.crew.pp.webhook.enteties.messages.Postback;
@@ -29,7 +28,7 @@ public class ShowCinemasObserver extends AbstractMessagingObserver {
 
     @Override
     public MessangerUserStatus getObservableStatus() {
-        return MessangerUserStatus.SELECT_NEAREST_CINEMA;
+        return MessangerUserStatus.SHOW_NEAREST_CINEMAS;
     }
 
     @Override
