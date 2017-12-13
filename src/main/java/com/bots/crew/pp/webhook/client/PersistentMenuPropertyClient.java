@@ -13,7 +13,7 @@ import java.util.Collections;
 
 @Component
 public class PersistentMenuPropertyClient extends AbstractFacebookClient<PersistentMenuRequest> {
-    String postUrl = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=" + super.pageAccessKey;
+    private String postUrl = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=" + super.pageAccessKey;
 
     public PersistentMenuPropertyClient(Environment env, RestTemplate restTemplate) {
         super(env, restTemplate);

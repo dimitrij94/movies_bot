@@ -1,14 +1,13 @@
-package com.bots.crew.pp.webhook.builders.generic.user_reservation;
+package com.bots.crew.pp.webhook.builders.generic.reservation;
 
 import com.bots.crew.pp.webhook.builders.generic.GenericReplyElementsBuilder;
-import com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply.CinemaGenericReplyElementsBuilder;
-import com.bots.crew.pp.webhook.builders.generic.list_or_find.MoviesRequestElementBuilder;
+import com.bots.crew.pp.webhook.builders.generic.cinema.CinemaGenericReplyElementsBuilder;
+import com.bots.crew.pp.webhook.builders.generic.movie.MoviesRequestElementBuilder;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateButton;
 import com.bots.crew.pp.webhook.enteties.request.GenericTamplateElement;
 import com.bots.crew.pp.webhook.services.UtilsService;
 
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.bots.crew.pp.webhook.observers;
 
 import com.bots.crew.pp.webhook.MessangerUserStatus;
-import com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply.LocatedCinemaGenericReplyBuilder;
+import com.bots.crew.pp.webhook.builders.generic.cinema.LocatedCinemaGenericReplyBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;

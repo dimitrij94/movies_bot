@@ -1,4 +1,4 @@
-package com.bots.crew.pp.webhook.builders.generic.cinema_genric_reply;
+package com.bots.crew.pp.webhook.builders.generic.cinema;
 
 import com.bots.crew.pp.webhook.builders.GenericReplyBuilder;
 import com.bots.crew.pp.webhook.enteties.db.Cinema;

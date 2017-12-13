@@ -4,6 +4,7 @@ import com.bots.crew.pp.webhook.client.GettingStartedPropertyClient;
 import com.bots.crew.pp.webhook.client.GreetingPropertyMessageClient;
 import com.bots.crew.pp.webhook.client.PersistentMenuPropertyClient;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 @Component("appProfileConfiguration")

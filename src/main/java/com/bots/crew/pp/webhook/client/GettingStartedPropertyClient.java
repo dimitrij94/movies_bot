@@ -9,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class GettingStartedPropertyClient extends AbstractFacebookClient<GetStartedRequest> {
-    HttpHeaders h = super.getDefaultHeaders();
-    String postUrl = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=" + super.pageAccessKey;
+    private HttpHeaders h = getDefaultHeaders();
+    private String postUrl = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=" + super.pageAccessKey;
 
     public GettingStartedPropertyClient(Environment env, RestTemplate restTemplate) {
         super(env, restTemplate);

@@ -18,7 +18,7 @@ public class PersistantMenuService {
         this.mapper = mapper;
     }
 
-    public PersistantMenuMessage matchesPersistantMenuSignature(Messaging message) {
+    public PersistantMenuMessage matchAndReturn(Messaging message) {
         Postback posback = message.getPostback();
         if (posback != null) {
             String postbackPayload = (String) posback.getPayload();

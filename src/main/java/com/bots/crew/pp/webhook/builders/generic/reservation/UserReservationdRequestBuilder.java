@@ -1,4 +1,4 @@
-package com.bots.crew.pp.webhook.builders.generic.user_reservation;
+package com.bots.crew.pp.webhook.builders.generic.reservation;
 
 import com.bots.crew.pp.webhook.builders.GenericReplyBuilder;
 import com.bots.crew.pp.webhook.enteties.db.UserReservation;

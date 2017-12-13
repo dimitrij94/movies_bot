@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableTransactionManagement
 public class PpApplication {
 
-
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();

@@ -3,7 +3,7 @@ package com.bots.crew.pp.webhook.observers;
 import com.bots.crew.pp.webhook.MessangerUserStatus;
 import com.bots.crew.pp.webhook.builders.QuickReplyBuilder;
 import com.bots.crew.pp.webhook.builders.ReplyBuilder;
-import com.bots.crew.pp.webhook.builders.generic.list_or_find.MoviesRequestBuilder;
+import com.bots.crew.pp.webhook.builders.generic.movie.MoviesRequestBuilder;
 import com.bots.crew.pp.webhook.builders.quick.GettingStartedQuickReplyBuilder;
 import com.bots.crew.pp.webhook.client.TextMessageClient;
 import com.bots.crew.pp.webhook.enteties.db.MessengerUser;

@@ -1,4 +1,4 @@
-package com.bots.crew.pp.webhook.builders.generic.list_or_find;
+package com.bots.crew.pp.webhook.builders.generic.movie;
 
 import com.bots.crew.pp.webhook.builders.generic.GenericReplyElementsBuilder;
 import com.bots.crew.pp.webhook.enteties.db.Movie;
