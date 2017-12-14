@@ -53,8 +53,7 @@ public class MovieSessionInitializer implements InitializingBean {
 
                         for (int t = 0; t < 4; t++) {
                             LocalTime time = LocalTime.of(hours[t], minutes[t]);
-                            Date sessionTime = Date.from(time.atDate(LocalDate.of(sessionDate.getYear(), sessionDate.getMonth(), sessionDate.getDayOfMonth())).
-                                    atZone(ZoneId.systemDefault()).toInstant());
+                            Date sessionTime = UtilsService.convertToDate(time, date);
 
                             session.setSessionTime(sessionTime);
                             movieSessionRepository.save(session);

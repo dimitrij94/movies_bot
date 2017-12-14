@@ -2,6 +2,7 @@ package com.bots.crew.pp.webhook.enteties.db;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "movie")
 public class Movie {
@@ -91,5 +92,22 @@ public class Movie {
 
     public void setReservations(List<UserReservation> reservations) {
         this.reservations = reservations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Movie movie = (Movie) o;
+        return Objects.equals(id, movie.id) &&
+                Objects.equals(title, movie.title) &&
+                Objects.equals(imageUrl, movie.imageUrl) &&
+                Objects.equals(trailerUrl, movie.trailerUrl);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, title, imageUrl, trailerUrl);
     }
 }

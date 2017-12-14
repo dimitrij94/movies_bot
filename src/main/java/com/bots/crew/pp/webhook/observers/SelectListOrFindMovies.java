@@ -55,7 +55,7 @@ public class SelectListOrFindMovies extends AbstractMessagingObserver {
                 reservation = userReservationService.saveReservationForToday(reservation, user);
                 return reservation;
             } else {
-                ((TextMessageClient) client).sendTextMessage(user.getPsid(), "Sorry it seams there are no movie sessions for today");
+                ((TextMessageClient) client).sendTextMessage(user.getPsid(), "Sorry it seams there are no movie sessions left for today");
                 return null;
             }
 

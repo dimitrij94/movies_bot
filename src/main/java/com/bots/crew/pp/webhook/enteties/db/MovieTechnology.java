@@ -2,6 +2,8 @@ package com.bots.crew.pp.webhook.enteties.db;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
+
 @Entity
 public class MovieTechnology {
     @Id
@@ -46,5 +48,20 @@ public class MovieTechnology {
 
     public void setUserReservation(List<UserReservation> userReservation) {
         this.userReservation = userReservation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieTechnology that = (MovieTechnology) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name);
     }
 }

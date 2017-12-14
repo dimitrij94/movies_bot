@@ -19,6 +19,14 @@ public class UtilsService {
         return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
+    public static Date convertToDate(LocalTime time, LocalDate date) {
+        return Date.from(time.atDate(LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth())).
+                atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+
+
+
     public static LocalTime convertToLocalTime(Date time) {
         Instant instant = Instant.ofEpochMilli(time.getTime());
         return  LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalTime();
