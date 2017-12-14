@@ -31,6 +31,10 @@ public class MovieSessionService {
         return this.repository.findAllByMovieAndCinemaLaterToday(id);
     }
 
+    public MovieSession save(MovieSession movieSession) {
+        return repository.save(movieSession);
+    }
+
     public List<MovieSession> findMoviesSessionsWithTechnology(UserReservation reservation, MovieTechnology selectedTechnology) {
         List<MovieSession> sessions;
         if (isReservationForToday(reservation)) {
@@ -61,6 +65,10 @@ public class MovieSessionService {
 
     public int countSessionsToday(Date userDate) {
         return repository.countBySessionDateAndSessionTime(userDate);
+    }
+
+    public void deleteAllSessions() {
+        repository.deleteAll();
     }
 /*
     public List<Date> findAvailableSessionDatesForReservation() {

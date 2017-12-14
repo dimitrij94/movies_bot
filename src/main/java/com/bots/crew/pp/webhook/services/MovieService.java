@@ -14,11 +14,15 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> findByGenre(int genreId){
+    public List<Movie> findByGenre(int genreId) {
         return movieRepository.findAllByMovieGenresIds(genreId);
     }
 
     public List<Movie> findTodayMovies() {
         return this.movieRepository.findMoviesTranslatedToday();
+    }
+
+    public Movie find(int movieId) {
+        return movieRepository.findOne(movieId);
     }
 }

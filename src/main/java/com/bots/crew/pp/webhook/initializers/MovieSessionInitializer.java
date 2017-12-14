@@ -69,7 +69,7 @@ public class MovieSessionInitializer implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (this.environment.getProperty("spring.jpa.hibernate.ddl-auto").equals("create-drop")) {
-            initialize();
+            //initialize();
         }
     }
 }

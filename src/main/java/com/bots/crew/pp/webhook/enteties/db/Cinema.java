@@ -2,6 +2,7 @@ package com.bots.crew.pp.webhook.enteties.db;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity(name = "cinema")
 public class Cinema {
@@ -100,23 +101,18 @@ public class Cinema {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Cinema cinema = (Cinema) o;
-
-        if (id != null ? !id.equals(cinema.id) : cinema.id != null) return false;
-        if (imageUrl != null ? !imageUrl.equals(cinema.imageUrl) : cinema.imageUrl != null) return false;
-        if (name != null ? !name.equals(cinema.name) : cinema.name != null) return false;
-        if (movies != null ? !movies.equals(cinema.movies) : cinema.movies != null) return false;
-        return sessions != null ? sessions.equals(cinema.sessions) : cinema.sessions == null;
+        return Double.compare(cinema.longitude, longitude) == 0 &&
+                Double.compare(cinema.latitude, latitude) == 0 &&
+                Objects.equals(id, cinema.id) &&
+                Objects.equals(imageUrl, cinema.imageUrl) &&
+                Objects.equals(name, cinema.name) &&
+                Objects.equals(address, cinema.address);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (movies != null ? movies.hashCode() : 0);
-        result = 31 * result + (sessions != null ? sessions.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id, imageUrl, name, address, longitude, latitude);
     }
 }

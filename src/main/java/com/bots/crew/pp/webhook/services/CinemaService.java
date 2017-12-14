@@ -20,6 +20,10 @@ public class CinemaService {
         this.googleMatrixApiService = googleMatrixApiService;
     }
 
+    public Cinema save(Cinema cinema) {
+        return this.repository.save(cinema);
+    }
+
     public List<Cinema> findCinemasForMovieToday(int movieId) {
         return repository.findCinemaForMovieSessionToday(movieId);
     }

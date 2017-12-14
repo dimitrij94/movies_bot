@@ -3,6 +3,7 @@ package com.bots.crew.pp.webhook.services;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,6 +26,13 @@ public class UtilsService {
 
     public static String convertToString(Date date) {
         return formatter.format(date);
+    }
+
+    public static Date addDays(Date date, int days){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        return calendar.getTime();
     }
 
 
